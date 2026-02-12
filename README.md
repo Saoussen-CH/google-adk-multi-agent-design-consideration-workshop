@@ -2,7 +2,7 @@
 
 **Multi-Agent Content Creation design consideration Workshop**
 
-An intelligent, multi-agent content creation system and comprehensive workshop powered by Google's Gemini models. This project demonstrates how to build AI agents with custom tools using Google's Agent Development Kit (ADK). Throughout the workshop, you will explore various design patterns (Sequential, Parallel, Iterative architectures), navigate agent architecture trade-offs (Sub-agents vs. Agent as a Tool), and master memory & context for reliable agent teams. It also covers implementing callbacks & observability, managing sessions, state, and artifacts, and achieving scalable deployment of a full-stack system (React frontend, FastAPI backend) to Vertex AI Agent Engine on Google Cloud Platform.
+An intelligent, multi-agent content creation system and comprehensive workshop powered by Google's Gemini models. This project demonstrates how to build AI agents with custom tools using Google's Agent Development Kit (ADK). Throughout the workshop, you will explore various design patterns (Sequential, Parallel, Iterative architectures), navigate agent architecture trade-offs (Sub-agents vs. Agent as a Tool), and master memory & context for reliable agent teams. It also covers implementing callbacks & observability, managing sessions, state, and artifacts, and achieving scalable deployment of a full-stack system (React frontend, FastAPI backend) to Vertex AI Agent Engine and Cloud Run on Google Cloud Platform.
 
 ## Workshop Notebooks - Start Here!
 
