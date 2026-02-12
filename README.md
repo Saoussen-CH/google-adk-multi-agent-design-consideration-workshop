@@ -1,4 +1,4 @@
-# Google ADK Multi-Agent on Vertex AI 
+# Google ADK Multi-Agent system on Vertex AI 
 
 **Multi-Agent Content Creation design consideration Workshop**
 
