@@ -1,4 +1,4 @@
-# Google ADK Multi-Agent system on Vertex AI 
+# Google ADK Multi-Agent on Vertex AI 
 
 **Multi-Agent Content Creation design consideration Workshop**
 
@@ -12,15 +12,15 @@ Interactive Jupyter notebooks to learn how to build multi-agent systems step by 
 
 | Part | Topic | Description | Colab Link |
 |------|-------|-------------|------------|
-| 1 | First Agent | Create your first AI agent with Google ADK | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part1_first_agent.ipynb) |
-| 2 | Custom Tools | Build custom tools for your agents | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part2_custom_tools.ipynb) |
-| 3 | Agent Teams | Coordinate multiple agents working together | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part3_agent_teams.ipynb) |
-| 4 | Sequential Workflows & Design Patterns | Sequential pipelines + when to use LLM vs workflow agents | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part4_sequential_workflows_and_design_patterns.ipynb) |
-| 5 | Iterative Workflows | Create quality improvement loops | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part5_iterative_workflows.ipynb) |
-| 6 | Parallel Workflows | Execute agents in parallel for efficiency | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part6_parallel_workflows.ipynb) |
-| 7 | Callbacks, Context & Memory | Callbacks, sessions/state, artifacts, and memory, including ADK's LoggingPlugin for local observability | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part7_callbacks_context_memory.ipynb) |
-| 8 | Capstone Project | Build the complete Content Creation Studio | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part8_capstone_project.ipynb) |
-| 9 | Deployment | Deploy agents to Agent Engine on GCP | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/content_creation_mas_workshop/blob/main/notebooks/part9_deployment_agent_engine.ipynb) |
+| 1 | First Agent | Create your first AI agent with Google ADK | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part1_first_agent.ipynb) |
+| 2 | Custom Tools | Build custom tools for your agents | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part2_custom_tools.ipynb) |
+| 3 | Agent Teams | Coordinate multiple agents working together | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part3_agent_teams.ipynb) |
+| 4 | Sequential Workflows & Design Patterns | Sequential pipelines + when to use LLM vs workflow agents | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part4_sequential_workflows_and_design_patterns.ipynb) |
+| 5 | Iterative Workflows | Create quality improvement loops | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part5_iterative_workflows.ipynb) |
+| 6 | Parallel Workflows | Execute agents in parallel for efficiency | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part6_parallel_workflows.ipynb) |
+| 7 | Callbacks, Context & Memory | Callbacks, sessions/state, artifacts, and memory, including ADK's LoggingPlugin for local observability | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part7_callbacks_context_memory.ipynb) |
+| 8 | Capstone Project | Build the complete Content Creation Studio | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part8_capstone_project.ipynb) |
+| 9 | Deployment | Deploy agents to Agent Engine on GCP | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/content_creation_mas/notebooks/part9_deployment_agent_engine.ipynb) |
 
 ### Workshop Learning Path
 
@@ -490,8 +490,6 @@ content_creation_mas/
 - **[Deployment Overview](deployment/README.md)** - General deployment instructions
 - **[Combined Deployment Guide](deployment/COMBINED_DEPLOYMENT.md)** - Deploy frontend + backend as single service
 - **[Setup Guide](deployment/SETUP_GUIDE.md)** - Detailed GCP setup instructions
-- **[Docker Auth Fix](deployment/DOCKER_AUTH_FIX.md)** - Fix Docker authentication issues
-- **[Troubleshooting](deployment/TROUBLESHOOTING.md)** - Common issues and solutions
 
 ### Application Documentation
 - **[Frontend README](frontend/README.md)** - React app documentation
