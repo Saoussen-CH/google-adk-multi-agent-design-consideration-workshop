@@ -461,7 +461,7 @@ content_creation_mas/
 │       └── content_analyzer_agent/
 ├── deployment/                # Deployment scripts
 │   ├── deploy.py             # Deploy agent to Agent Engine
-│   ├── deploy-cloudrun.sh    # Deploy frontend/backend to Cloud Run
+│   ├── deploy-combined.sh    # Deploy frontend/backend to Cloud Run
 │   └── cleanup.py            # Cleanup deployed resources
 ├── api_server.py             # Legacy local server
 └── .env                      # Environment configuration
@@ -491,7 +491,6 @@ content_creation_mas/
 
 ### Deployment Guides
 - **[Deployment Overview](deployment/README.md)** - General deployment instructions
-- **[Combined Deployment Guide](deployment/COMBINED_DEPLOYMENT.md)** - Deploy frontend + backend as single service
 - **[Setup Guide](deployment/SETUP_GUIDE.md)** - Detailed GCP setup instructions
 
 ### Application Documentation

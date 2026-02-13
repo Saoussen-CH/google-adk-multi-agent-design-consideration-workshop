@@ -1,6 +1,6 @@
 # Deployment Guide - Content Creation Studio
 
-Complete deployment guide for DevFest Fusion 4.0 Workshop
+Complete deployment guide for the Google ADK & Vertex AI Multi-Agent Workshop
 
 ## 📋 Prerequisites
 
@@ -37,18 +37,11 @@ python deploy.py
 ./deploy-combined.sh
 ```
 
-### Step 5: Test Deployed Agent
-
-```bash
-python test_deployed_agent.py
-```
-
 ## 📁 Files
 
 - `setup_gcp.sh` - GCP environment setup
 - `deploy.py` - Deploy agent to Agent Engine
 - `deploy-combined.sh` - Deploy frontend/backend to Cloud Run
-- `test_deployed_agent.py` - Test deployed agent
 - `cleanup_gcp.sh` - Shell script to clean up all GCP resources
 - `cleanup_gcp.py` - Python script for comprehensive cleanup
 - `SETUP_GUIDE.md` - Detailed manual setup guide

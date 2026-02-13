@@ -602,25 +602,7 @@ MAX_IMPROVEMENT_ITERATIONS=3
 EOF
 ```
 
-#### Step 4: Run Agent (CLI Mode)
-
-```bash
-# Test the agent directly
-python run_agent.py
-```
-
-**Expected output:**
-```
-🚀 Content Creation Multi-Agent System
-=====================================
-📝 Sending query to agent...
-
-[Real-time agent workflow output...]
-
-✅ Content creation completed!
-```
-
-#### Step 5: Run with Web Interface (Optional)
+#### Step 4: Run with Web Interface
 
 **Terminal 1 - Backend:**
 ```bash
