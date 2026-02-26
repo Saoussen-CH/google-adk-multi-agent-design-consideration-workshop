@@ -88,7 +88,7 @@ full_content_workflow                    (word count, readability,
 
       </google-codelab-step>
     
-      <google-codelab-step label="2. Set Up Your Environment" duration="10">
+      <google-codelab-step label="Set Up Your Environment" duration="10">
         <h2 is-upgraded>Need Google Cloud Credits?</h2>
 <ul>
 <li><strong>If you are attending an instructor-led workshop</strong>: Your instructor will provide you with a credit code. Please use the one they provide.</li>
@@ -187,7 +187,7 @@ WORKER_MODEL=gemini-2.5-flash
 
       </google-codelab-step>
     
-      <google-codelab-step label="3. ADK Core Concepts" duration="10">
+      <google-codelab-step label="ADK Core Concepts" duration="10">
         <p>Before writing any code, it&#39;s worth understanding the four core objects that ADK uses to run every agent. You&#39;ll see these referenced throughout the codelab.</p>
 <h2 is-upgraded>The four building blocks</h2>
 <p><strong>Agent</strong></p>
@@ -232,7 +232,7 @@ async for event in runner.run_async(
 
       </google-codelab-step>
     
-      <google-codelab-step label="4. Centralized Configuration" duration="5">
+      <google-codelab-step label="Centralized Configuration" duration="5">
         <p>Open <code>content_creation_studio/config.py</code>. You&#39;ll see three <code># TODO</code> placeholders.</p>
 <h2 is-upgraded>Why centralize configuration?</h2>
 <p>All 9 agents in your system share the same model name and retry settings. Defining them once in <code>config.py</code> means you change a model name in one place instead of nine. <strong>Fill this in first</strong> — every agent file imports <code>MODEL_NAME</code> and <code>RETRY_CONFIG</code> from here.</p>
@@ -269,7 +269,7 @@ MAX_IMPROVEMENT_ITERATIONS = int(os.getenv(&#34;MAX_IMPROVEMENT_ITERATIONS&#34;,
 
       </google-codelab-step>
     
-      <google-codelab-step label="5. Your First Agent — Topic Research" duration="10">
+      <google-codelab-step label="Your First Agent — Topic Research" duration="10">
         <p>Open <code>content_creation_studio/sub_agents/topic_research_agent/agent.py</code>.</p>
 <h2 is-upgraded>The Agent constructor</h2>
 <p>Every ADK agent is defined with the <code>Agent</code> class. The key parameters:</p>
@@ -335,7 +335,7 @@ topic_research_agent = Agent(
 
       </google-codelab-step>
     
-      <google-codelab-step label="6. Building Custom Tools" duration="15">
+      <google-codelab-step label="Building Custom Tools" duration="15">
         <p>Open <code>content_creation_studio/tools.py</code>. This file defines the five custom tools your agents will use.</p>
 <h2 is-upgraded>How ADK tools work</h2>
 <p>Any plain Python function with type-annotated parameters and a docstring becomes an ADK tool. The docstring is shown to the model as the tool description, so write it clearly.</p>
@@ -467,7 +467,7 @@ print(calculate_readability_score(&#39;The cat sat on the mat. It was a good day
 
       </google-codelab-step>
     
-      <google-codelab-step label="7. Agent Teams: sub_agents vs AgentTool" duration="15">
+      <google-codelab-step label="Agent Teams: sub_agents vs AgentTool" duration="15">
         <p>When you want one agent to delegate work to another, ADK gives you two patterns. Choosing the right one matters for how data flows and how events are exposed.</p>
 <h2 is-upgraded>Pattern 1 — AgentTool (agent as a callable tool)</h2>
 <p><code>AgentTool</code> wraps an entire agent as a tool that a parent agent can call. The parent LLM decides <em>when</em> to call it and what to pass as input, just like any other tool.</p>
@@ -535,7 +535,7 @@ coordinator/orchestrator
 
       </google-codelab-step>
     
-      <google-codelab-step label="8. Sequential Workflow &#43; Design Patterns" duration="15">
+      <google-codelab-step label="Sequential Workflow &#43; Design Patterns" duration="15">
         <h2 is-upgraded>SequentialAgent</h2>
 <p>A <code>SequentialAgent</code> runs its <code>sub_agents</code> list in strict left-to-right order. Each agent completes before the next one starts. This is perfect for pipelines where step 2 depends on the output of step 1.</p>
 <pre><code>SequentialAgent
@@ -619,7 +619,7 @@ coordinator/orchestrator
 
       </google-codelab-step>
     
-      <google-codelab-step label="9. Session State — The Content Drafter" duration="10">
+      <google-codelab-step label="Session State — The Content Drafter" duration="10">
         <p>Open <code>content_creation_studio/sub_agents/content_drafter_agent/agent.py</code>.</p>
 <h2 is-upgraded>How session state works</h2>
 <p>Every ADK conversation has a <code>Session</code> object with a <code>state</code> dictionary. All agents in the same session share this dictionary — it&#39;s how they pass data to each other.</p>
@@ -665,7 +665,7 @@ content_drafter_agent = Agent(
 
       </google-codelab-step>
     
-      <google-codelab-step label="10. The Quality Loop — Checker, Improver, and LoopAgent" duration="15">
+      <google-codelab-step label="The Quality Loop — Checker, Improver, and LoopAgent" duration="15">
         <p>A draft is a starting point, not a finished product. In this step you&#39;ll add an automatic quality review cycle.</p>
 <h2 is-upgraded>LoopAgent</h2>
 <p>A <code>LoopAgent</code> runs its <code>sub_agents</code> list in order, then repeats from the beginning. It stops when either:</p>
@@ -756,7 +756,7 @@ root_agent = two_phase_pipeline
 
       </google-codelab-step>
     
-      <google-codelab-step label="11. Parallel Content Creation" duration="15">
+      <google-codelab-step label="Parallel Content Creation" duration="15">
         <p>The draft has been researched, written, and quality-checked. Now generate four content formats simultaneously.</p>
 <h2 is-upgraded>ParallelAgent</h2>
 <p>A <code>ParallelAgent</code> runs all its <code>sub_agents</code> at the same time. Each agent independently reads the same session state snapshot. This is the &#34;fan-out&#34; pattern: one input, multiple concurrent outputs.</p>
@@ -863,7 +863,7 @@ parallel_content_creation = ParallelAgent(
 
       </google-codelab-step>
     
-      <google-codelab-step label="12. Assemble the Full Pipeline" duration="5">
+      <google-codelab-step label="Assemble the Full Pipeline" duration="5">
         <p>Now compose all three phases into the complete content workflow.</p>
 <h2 is-upgraded>Fill in the full workflow</h2>
 <pre><code language="language-python" class="language-python"># content_creation_studio/agent.py
@@ -901,7 +901,7 @@ print([a.name for a in full_content_workflow.sub_agents])
 
       </google-codelab-step>
     
-      <google-codelab-step label="13. The Master Orchestrator" duration="10">
+      <google-codelab-step label="The Master Orchestrator" duration="10">
         <p>The orchestrator is the entry point — it decides whether a request goes to the full content workflow or the text analyzer.</p>
 <h2 is-upgraded>Content Analyzer Agent</h2>
 <p>First, fill in the content analyzer. Open <code>sub_agents/content_analyzer_agent/agent.py</code>:</p>
@@ -978,7 +978,7 @@ root_agent = master_orchestrator_agent
 
       </google-codelab-step>
     
-      <google-codelab-step label="14. Callbacks — Observability &amp; Safety (Optional)" duration="15">
+      <google-codelab-step label="Callbacks — Observability &amp; Safety (Optional)" duration="15">
         <p>Callbacks let you intercept agent execution at six points without modifying agent logic. Open <code>content_creation_studio/callbacks.py</code>. The imports, type annotations, <code>_extract_session_id</code> helper, and <code>BLOCKED_TOPICS</code> list are already provided — fill in the four function bodies.</p>
 <h2 is-upgraded>The six callback hooks</h2>
 <table>
@@ -1096,7 +1096,7 @@ def after_model_callback(
 
       </google-codelab-step>
     
-      <google-codelab-step label="15. Artifacts — Persistent File Storage (Optional)" duration="10">
+      <google-codelab-step label="Artifacts — Persistent File Storage (Optional)" duration="10">
         <p>You&#39;ve seen two data persistence layers so far: <strong>session state</strong> (lives for one conversation) and <strong>memory</strong> (lives across all conversations). Artifacts are the third layer: named, versioned file storage tied to a session.</p>
 <h2 is-upgraded>The three-layer persistence model</h2>
 <table>
@@ -1187,7 +1187,7 @@ await tool_context.save_artifact(filename=&#34;user:blog_post.md&#34;, artifact=
 
       </google-codelab-step>
     
-      <google-codelab-step label="16. Long-Term Memory (Optional)" duration="10">
+      <google-codelab-step label="Long-Term Memory (Optional)" duration="10">
         <p>Your agents currently remember nothing between sessions. Let&#39;s fix that.</p>
 <h2 is-upgraded>Session vs Memory</h2>
 <table>
@@ -1228,7 +1228,7 @@ await tool_context.save_artifact(filename=&#34;user:blog_post.md&#34;, artifact=
 
       </google-codelab-step>
     
-      <google-codelab-step label="17. Deploy to Vertex AI Agent Engine" duration="20">
+      <google-codelab-step label="Deploy to Vertex AI Agent Engine" duration="20">
         <p><strong>Prerequisites:</strong> Vertex AI API enabled on your GCP project. Your credentials are already set up from Cloud Shell — no extra authentication needed.</p>
 <h2 is-upgraded>Why Agent Engine?</h2>
 <p>Running locally is great for development. Agent Engine provides:</p>
@@ -1262,7 +1262,7 @@ gcloud storage buckets create gs://$GOOGLE_CLOUD_PROJECT-content-studio --locati
 
       </google-codelab-step>
     
-      <google-codelab-step label="18. Full-Stack Cloud Run Deployment" duration="25">
+      <google-codelab-step label="Full-Stack Cloud Run Deployment" duration="25">
         <p><strong>Prerequisites:</strong> Agent Engine deployed (Step 17) and <code>AGENT_ENGINE_RESOURCE_NAME</code> set in your <code>.env</code>.</p>
 <p>So far you&#39;ve run the agent locally via <code>adk web</code>. In this step you&#39;ll deploy a production web application: a React frontend served by a FastAPI backend, both packaged in a single Docker container on Cloud Run.</p>
 <h2 is-upgraded>Architecture</h2>
@@ -1390,7 +1390,7 @@ bash deployment/deploy-combined.sh
 
       </google-codelab-step>
     
-      <google-codelab-step label="19. Clean Up Resources" duration="5">
+      <google-codelab-step label="Clean Up Resources" duration="5">
         <p>If you deployed in Steps 17 or 18, clean up your resources to avoid ongoing charges.</p>
 <h2 is-upgraded>What gets cleaned up</h2>
 <p>The cleanup script removes:</p>
@@ -1435,7 +1435,7 @@ python deployment/deploy.py --action cleanup
 
       </google-codelab-step>
     
-      <google-codelab-step label="20. Congratulations!" duration="5">
+      <google-codelab-step label="Congratulations!" duration="5">
         <p>You&#39;ve built and deployed a multi-agent content creation system. Here&#39;s a summary of everything you built:</p>
 <h2 is-upgraded>What you built</h2>
 <pre><code>master_orchestrator_agent
