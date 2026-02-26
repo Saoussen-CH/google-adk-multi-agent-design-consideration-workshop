@@ -51,4 +51,10 @@ htmlcov/
 *.log
 WORKSHOP.md
 
- codelab/codelab.md
+codelab/codelab.md
+
+# ADK session databases
+.adk/
+
+# claat local export (use docs/ for GitHub Pages)
+content-creation-studio-adk/
