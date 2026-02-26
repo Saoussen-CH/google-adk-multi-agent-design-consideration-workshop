@@ -1,5 +1,7 @@
 # Publishing the Codelab to GitHub Pages
 
+https://saoussen-chaabnia-ai.com/google-adk-multi-agent-design-consideration-workshop/#0
+
 ## Prerequisites
 
 - The `codelab/codelab.md` file is complete and up to date
