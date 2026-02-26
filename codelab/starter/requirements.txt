@@ -1,0 +1,17 @@
+# Content Creation Studio - Python Requirements
+
+# Core Agent Development Kit
+google-cloud-aiplatform[agent_engines]>=1.112
+google-adk==1.24.1
+
+# FastAPI Backend
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-dotenv>=1.0.0
+
+# Google Cloud Dependencies
+vertexai>=1.38.0
+requests>=2.32.4
+
+# Utilities
+click>=8.1.8
