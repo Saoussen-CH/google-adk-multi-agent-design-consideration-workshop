@@ -52,6 +52,7 @@ htmlcov/
 WORKSHOP.md
 
 codelab/codelab.md
+codelab/PUBLISH.md
 
 # ADK session databases
 .adk/

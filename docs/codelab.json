@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2026-02-26T09:44:25+01:00",
+  "updated": "2026-03-02T02:21:48+01:00",
   "id": "content-creation-studio-adk",
-  "duration": 230,
+  "duration": 235,
   "title": "Multi-Agent Systems with Google ADK \u0026 Vertex AI: Design Considerations",
   "authors": "Saoussen Chaabnia",
   "summary": "Build a multi-agent content creation system step-by-step using Google’s Agent Development Kit (ADK), covering SequentialAgent, LoopAgent, ParallelAgent, callbacks, artifacts, memory, and full-stack deployment.",
-  "source": "codelab/codelab.md",
+  "source": "codelab.md",
   "theme": "",
   "status": [
     "published"

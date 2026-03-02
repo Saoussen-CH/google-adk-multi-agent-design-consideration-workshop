@@ -145,6 +145,10 @@ source .venv/bin/activate
 <pre><code>your-project-id
 </code></pre>
 <p>If this is empty, set it with: <code>gcloud config set project YOUR_PROJECT_ID</code></p>
+<p>👉 💻 Set up Application Default Credentials so the Vertex AI SDK can authenticate:</p>
+<pre><code language="language-bash" class="language-bash">gcloud auth application-default login
+</code></pre>
+<p>Follow the browser prompt to log in with your Google account. This writes credentials to <code>~/.config/gcloud/application_default_credentials.json</code>, which the ADK uses automatically when <code>GOOGLE_GENAI_USE_VERTEXAI=1</code>.</p>
 <p>👉 💻 Copy the example <code>.env</code> file and open it in the Cloud Shell editor:</p>
 <pre><code language="language-bash" class="language-bash">cp .env.example .env
 cloudshell edit .env
@@ -156,7 +160,7 @@ GOOGLE_CLOUD_LOCATION=us-central1
 GOOGLE_GENAI_USE_VERTEXAI=1
 WORKER_MODEL=gemini-2.5-flash
 </code></pre>
-<p>💡 <strong>Why no API key?</strong> Cloud Shell is already authenticated via <strong>Application Default Credentials</strong>. Setting <code>GOOGLE_GENAI_USE_VERTEXAI=1</code> tells ADK to use Vertex AI with your GCP credentials — this applies throughout the entire codelab.</p>
+<p>💡 <strong>Why no API key?</strong> The <code>gcloud auth application-default login</code> command you ran sets up <strong>Application Default Credentials</strong>. Setting <code>GOOGLE_GENAI_USE_VERTEXAI=1</code> tells ADK to use those credentials with Vertex AI — no separate API key needed. This applies throughout the entire codelab.</p>
 <p>👉 Save the file (<code>Ctrl+S</code> in the editor), then return to the terminal.</p>
 <h2 is-upgraded>Verify your setup</h2>
 <p>👉 💻 Run:</p>
@@ -173,15 +177,15 @@ WORKER_MODEL=gemini-2.5-flash
 <p><strong><code>adk web</code></strong></p>
 <p><strong>:</strong></p>
 <p>👉 💻 Start the dev server from your project root (the <code>starter/</code> directory):</p>
-<pre><code language="language-bash" class="language-bash">adk web
+<pre><code language="language-bash" class="language-bash">adk web --port 8080 --reload_agents
 </code></pre>
 <p>👉 👀 Open the Web Preview:</p>
 <ol type="1">
 <li>Click the <strong>Web Preview</strong> button (the eye icon <code>👁</code>) in the Cloud Shell toolbar</li>
-<li>Select <strong>&#34;Preview on port 8000&#34;</strong></li>
+<li>Select <strong>&#34;Preview on port 8080&#34;</strong></li>
 </ol>
 <p>This opens the ADK Dev UI in a new browser tab.</p>
-<p>All <code>http://localhost:8000</code> references in this codelab map to this Web Preview URL.</p>
+<p>All <code>http://localhost:8080</code> references in this codelab map to this Web Preview URL.</p>
 <p>👉 To stop the server, press <code>Ctrl+C</code> in the terminal before moving to the next step.</p>
 
 
@@ -322,28 +326,36 @@ topic_research_agent = Agent(
 <p><strong><code>Gemini(..., retry_options=RETRY_CONFIG)</code></strong></p>
 <p><strong>?</strong> The bare model name string also works (<code>model="gemini-2.5-flash"</code>), but wrapping it gives us automatic retries on rate limits — essential for multi-agent pipelines that make many sequential API calls.</p>
 <h2 is-upgraded>Test the agent</h2>
-<p>Set <code>root_agent = topic_research_agent</code> temporarily in <code>agent.py</code>, then:</p>
-<pre><code language="language-bash" class="language-bash">adk web
+<p>In <code>content_creation_studio/agent.py</code>, find the last line and temporarily change it:</p>
+<pre><code language="language-python" class="language-python"># Change this:
+root_agent = master_orchestrator_agent
+
+# To this:
+root_agent = topic_research_agent
 </code></pre>
-<p>Use the Cloud Shell Web Preview on port 8000 to open the ADK Dev UI (see Step 2 for how). Select <code>content_creation_studio</code> from the dropdown, then type:</p>
-<pre><code>Write a blog about sustainable packaging for eco-conscious millennials
+<p>Then start the dev server:</p>
+<pre><code language="language-bash" class="language-bash">adk web --port 8080 --reload_agents
 </code></pre>
+<p>Use the Cloud Shell Web Preview on port 8080 to open the ADK Dev UI (see Step 2 for how). Select <code>content_creation_studio</code> from the dropdown, then type:</p>
+<pre><code>Find the best blog topic about sustainable packaging for eco-conscious millennials
+</code></pre>
+<p><strong>What to expect:</strong> This agent only researches and outputs a <strong>single blog title</strong> — it does not write the full blog. The full pipeline (draft → quality loop → publish-ready post) is assembled in later steps. You are just testing one piece of it here.</p>
 <p>You&#39;ll see the agent use <code>google_search</code> and return a specific blog title. In the <strong>State</strong> tab on the left, you&#39;ll see <code>blog_topic</code> appear with the agent&#39;s output. In the <strong>Events</strong> panel, you can click each event to inspect the exact model request and response.</p>
 <p>Press <code>Ctrl+C</code> to stop the server.</p>
-<p><strong>Before moving on:</strong> Remove the temporary <code>root_agent = topic_research_agent</code> line from <code>agent.py</code>. The final <code>root_agent</code> assignment will be set in Step 13.</p>
+<p><strong>Before moving on:</strong> Restore the last line of <code>agent.py</code> back to <code>root_agent = master_orchestrator_agent</code>. The final <code>root_agent</code> assignment will be set in Step 13.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Building Custom Tools" duration="15">
-        <p>Open <code>content_creation_studio/tools.py</code>. This file defines the five custom tools your agents will use.</p>
+      <google-codelab-step label="Building Custom Tools" duration="10">
+        <p>Open <code>content_creation_studio/tools.py</code>. The tools are already implemented — your job in this step is to <strong>read and understand</strong> them before using them in later steps.</p>
 <h2 is-upgraded>How ADK tools work</h2>
 <p>Any plain Python function with type-annotated parameters and a docstring becomes an ADK tool. The docstring is shown to the model as the tool description, so write it clearly.</p>
 <pre><code language="language-python" class="language-python">def my_tool(input: str) -&gt; dict:
     &#34;&#34;&#34;Does something useful with the input.&#34;&#34;&#34;
     return {&#34;result&#34;: &#34;...&#34;}
 </code></pre>
-<p>ADK handles everything else: converting it to a JSON schema, calling it when the model requests it, and returning the result.</p>
+<p>ADK handles everything else: converting the function to a JSON schema, calling it when the model requests it, and returning the result back to the model.</p>
 <p><strong>Design note:</strong> Keep tools focused on a single task. One agent with many related tools beats one mega-agent with every tool imaginable — it&#39;s easier to reason about, test, and reuse.</p>
 <h2 is-upgraded>Passing custom tools to an agent: <code>FunctionTool</code></h2>
 <p>Built-in tools like <code>google_search</code> are passed directly in the <code>tools</code> list. Custom Python functions must be wrapped in <code>FunctionTool</code> so ADK knows to treat them as callable tools:</p>
@@ -356,106 +368,37 @@ agent = Agent(
 )
 </code></pre>
 <p>You&#39;ll see <code>FunctionTool</code> used in the agent files starting from Step 10.</p>
-<h2 is-upgraded>The <code>QUALITY_THRESHOLD_MET</code> sentinel</h2>
-<p>At the bottom of <code>tools.py</code>, add this constant:</p>
-<pre><code language="language-python" class="language-python"># Loop control sentinel — quality checker writes this string to signal approval
-QUALITY_THRESHOLD_MET = &#34;QUALITY_THRESHOLD_MET&#34;
-</code></pre>
-<p>The quality checker agent will output this exact string when the content passes the score threshold. The content improver agent checks for this string and, if found, calls <code>exit_loop</code>. Using a named constant instead of a hardcoded string keeps both agents in sync — change it in one place and both agents update.</p>
-<h2 is-upgraded>Fill in the tools one by one</h2>
-<p><strong><code>count_words</code></strong> — split on whitespace and count:</p>
-<pre><code language="language-python" class="language-python">def count_words(text: str) -&gt; int:
-    &#34;&#34;&#34;Counts the number of words in the provided text.&#34;&#34;&#34;
-    print(f&#34;🔧 Tool: Counting words...&#34;)
-    count = len(text.split())
-    print(f&#34;   Result: {count} words&#34;)
-    return count
-</code></pre>
-<p><strong><code>calculate_readability_score</code></strong> — implements the Flesch Reading Ease formula:</p>
-<pre><code language="language-python" class="language-python">def calculate_readability_score(text: str) -&gt; dict:
-    &#34;&#34;&#34;Calculates a readability score (0-100, higher is easier to read).&#34;&#34;&#34;
-    print(f&#34;🔧 Tool: Calculating readability...&#34;)
-    sentences = [s.strip() for s in text.split(&#39;.&#39;) if s.strip()]
-    if not sentences:
-        return {&#34;score&#34;: 0, &#34;grade&#34;: &#34;Unable to calculate&#34;}
-    words = text.split()
-    total_words = len(words)
-    total_sentences = len(sentences)
-    total_syllables = sum(count_syllables(word) for word in words)
-    if total_words == 0 or total_sentences == 0:
-        score = 0
-    else:
-        score = 206.835 - 1.015 * (total_words / total_sentences) - 84.6 * (total_syllables / total_words)
-        score = max(0, min(100, score))
-    grade = &#34;Easy to read&#34; if score &gt;= 60 else &#34;Moderate&#34; if score &gt;= 50 else &#34;Complex&#34;
-    result = {&#34;score&#34;: round(score, 2), &#34;grade&#34;: grade}
-    print(f&#34;   Result: {result[&#39;score&#39;]} - {result[&#39;grade&#39;]}&#34;)
-    return result
-</code></pre>
-<p><strong><code>generate_hashtags</code></strong> — extract frequent non-stop words and format them:</p>
-<pre><code language="language-python" class="language-python">def generate_hashtags(text: str, count: int) -&gt; List[str]:
-    &#34;&#34;&#34;Generates relevant hashtags from text by extracting key terms.&#34;&#34;&#34;
-    print(f&#34;🔧 Tool: Generating {count} hashtags...&#34;)
-    stop_words = {
-        &#39;the&#39;, &#39;is&#39;, &#39;at&#39;, &#39;which&#39;, &#39;on&#39;, &#39;a&#39;, &#39;an&#39;, &#39;as&#39;, &#39;are&#39;, &#39;was&#39;, &#39;were&#39;,
-        &#39;been&#39;, &#39;be&#39;, &#39;have&#39;, &#39;has&#39;, &#39;had&#39;, &#39;do&#39;, &#39;does&#39;, &#39;did&#39;, &#39;will&#39;, &#39;would&#39;,
-        &#39;could&#39;, &#39;should&#39;, &#39;may&#39;, &#39;might&#39;, &#39;must&#39;, &#39;can&#39;, &#39;of&#39;, &#39;to&#39;, &#39;for&#39;, &#39;in&#39;,
-        &#39;with&#39;, &#39;by&#39;, &#39;from&#39;, &#39;up&#39;, &#39;about&#39;, &#39;into&#39;, &#39;through&#39;, &#39;during&#39;, &#39;and&#39;,
-        &#39;or&#39;, &#39;but&#39;, &#39;if&#39;, &#39;then&#39;, &#39;than&#39;, &#39;so&#39;, &#39;this&#39;, &#39;that&#39;, &#39;these&#39;, &#39;those&#39;
-    }
-    words = re.findall(r&#39;\b[a-zA-Z]{4,}\b&#39;, text.lower())
-    word_freq = {}
-    for word in words:
-        if word not in stop_words:
-            word_freq[word] = word_freq.get(word, 0) + 1
-    sorted_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
-    top_words = [word for word, freq in sorted_words[:count]]
-    hashtags = [f&#34;#{word.capitalize()}&#34; for word in top_words]
-    print(f&#34;   Result: {&#39;, &#39;.join(hashtags)}&#34;)
-    return hashtags
-</code></pre>
-<p><strong><code>calculate_content_quality_score</code></strong> — weighted scoring formula:</p>
-<pre><code language="language-python" class="language-python">def calculate_content_quality_score(
-    word_count: int,
-    readability_score: float,
-    has_headings: bool,
-    has_conclusion: bool
-) -&gt; dict:
-    &#34;&#34;&#34;Calculates overall content quality score based on multiple factors.&#34;&#34;&#34;
-    print(f&#34;🔧 Tool: Calculating quality score...&#34;)
-    if word_count &lt; 500:
-        word_score = 30
-    elif word_count &lt; 800:
-        word_score = 60
-    elif word_count &lt;= 2000:
-        word_score = 100
-    else:
-        word_score = 80
-    read_score = min(100, readability_score * 1.5) if readability_score &gt; 0 else 40
-    structure_score = 0
-    if has_headings:
-        structure_score += 50
-    if has_conclusion:
-        structure_score += 50
-    overall_score = (word_score * 0.3) + (read_score * 0.3) + (structure_score * 0.4)
-    result = {
-        &#34;overall_score&#34;: round(overall_score, 2),
-        &#34;word_count&#34;: word_count,
-        &#34;meets_threshold&#34;: overall_score &gt;= 70
-    }
-    print(f&#34;   Result: {result[&#39;overall_score&#39;]}/100 ({&#39;MET&#39; if result[&#39;meets_threshold&#39;] else &#39;NOT MET&#39;})&#34;)
-    return result
-</code></pre>
-<p><strong><code>exit_loop</code></strong> — the key loop-control tool:</p>
-<pre><code language="language-python" class="language-python">def exit_loop(tool_context: ToolContext):
-    &#34;&#34;&#34;Terminates the improvement loop when quality meets threshold.&#34;&#34;&#34;
-    print(f&#34;🔧 Tool: Quality approved. Terminating loop...&#34;)
-    tool_context.actions.escalate = True
-    return {&#34;result&#34;: &#34;Quality threshold met. Content approved.&#34;}
-</code></pre>
+<h2 is-upgraded>Walk through the tools in <code>tools.py</code></h2>
+<p>👉 Open <code>content_creation_studio/tools.py</code> and read through each function. Here is what each tool does and why it exists:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Tool</p>
+</td><td colspan="1" rowspan="1"><p>Returns</p>
+</td><td colspan="1" rowspan="1"><p>Purpose</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>count_words(text)</code></p>
+</td><td colspan="1" rowspan="1"><p><code>int</code></p>
+</td><td colspan="1" rowspan="1"><p>Counts words by splitting on whitespace</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>calculate_readability_score(text)</code></p>
+</td><td colspan="1" rowspan="1"><p><code>dict</code> with <code>score</code> and <code>grade</code></p>
+</td><td colspan="1" rowspan="1"><p>Flesch Reading Ease formula — higher score = easier to read</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>generate_hashtags(text, count)</code></p>
+</td><td colspan="1" rowspan="1"><p><code>List[str]</code></p>
+</td><td colspan="1" rowspan="1"><p>Extracts frequent non-stop words and formats them as <code>#Hashtags</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>calculate_content_quality_score(...)</code></p>
+</td><td colspan="1" rowspan="1"><p><code>dict</code> with <code>overall_score</code> and <code>meets_threshold</code></p>
+</td><td colspan="1" rowspan="1"><p>Weighted formula: 30% word count + 30% readability + 40% structure</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>exit_loop(tool_context)</code></p>
+</td><td colspan="1" rowspan="1"><p><code>dict</code></p>
+</td><td colspan="1" rowspan="1"><p>Sets <code>tool_context.actions.escalate = True</code> to break out of a <code>LoopAgent</code></p>
+</td></tr>
+</table>
 <p><strong>Key concept — </strong></p>
 <p><strong><code>exit_loop</code></strong></p>
-<p><strong>:</strong> This tool sets <code>tool_context.actions.escalate = True</code> — a special flag on the ADK invocation context. You&#39;ll see exactly how this flag is used to break out of a quality improvement loop in Step 10.</p>
+<p><strong>:</strong> Setting <code>tool_context.actions.escalate = True</code> is the ADK signal to stop a <code>LoopAgent</code> early. You&#39;ll see exactly how this is used in Step 10.</p>
 <h2 is-upgraded>Verify</h2>
 <pre><code language="language-bash" class="language-bash">python -c &#34;
 from content_creation_studio.tools import count_words, calculate_readability_score
@@ -463,12 +406,13 @@ print(count_words(&#39;Hello world this is a test&#39;))
 print(calculate_readability_score(&#39;The cat sat on the mat. It was a good day.&#39;))
 &#34;
 </code></pre>
+<p>You now have all the tools your agents will use. The next question is: how do agents work <em>together</em>? Before building the multi-step pipeline, you need to understand the two ways ADK lets agents delegate work to each other.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Agent Teams: sub_agents vs AgentTool" duration="15">
-        <p>When you want one agent to delegate work to another, ADK gives you two patterns. Choosing the right one matters for how data flows and how events are exposed.</p>
+        <p>You&#39;ve seen how a single agent uses tools to get things done. But in a multi-agent system, agents also need to delegate work to <em>other agents</em>. ADK gives you two patterns for this — and choosing the wrong one has real consequences for how data flows, how events are visible, and how much control the parent agent has.</p>
 <h2 is-upgraded>Pattern 1 — AgentTool (agent as a callable tool)</h2>
 <p><code>AgentTool</code> wraps an entire agent as a tool that a parent agent can call. The parent LLM decides <em>when</em> to call it and what to pass as input, just like any other tool.</p>
 <pre><code language="language-python" class="language-python">from google.adk.tools import agent_tool
@@ -535,7 +479,93 @@ coordinator/orchestrator
 
       </google-codelab-step>
     
-      <google-codelab-step label="Sequential Workflow &#43; Design Patterns" duration="15">
+      <google-codelab-step label="Choosing the Right Architecture" duration="10">
+        <p>Before writing any agent code, the most important question is: <strong>what pattern fits your problem?</strong> Using the wrong architecture leads to brittle systems, unnecessary cost, and agents that fight each other instead of collaborating.</p>
+<p>This section is based on the official Google Cloud guidance: <a href="https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system" target="_blank">Choose a design pattern for your agentic AI system</a>.</p>
+<h2 is-upgraded>Pattern categories</h2>
+<p>Google Cloud groups agentic patterns into four categories based on your workload&#39;s characteristics:</p>
+<p><strong>Deterministic workflows</strong> — the execution order is fixed in code, not decided by a model:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>If your task looks like this...</p>
+</td><td colspan="1" rowspan="1"><p>Pattern</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Multi-step pipeline where each step depends on the previous</p>
+</td><td colspan="1" rowspan="1"><p><strong>Sequential</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Independent sub-tasks that can run at the same time</p>
+</td><td colspan="1" rowspan="1"><p><strong>Parallel</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Complex generation requiring progressive quality improvement</p>
+</td><td colspan="1" rowspan="1"><p><strong>Iterative Refinement</strong></p>
+</td></tr>
+</table>
+<p><strong>Dynamic orchestration</strong> — a model decides routing and delegation at runtime:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>If your task looks like this...</p>
+</td><td colspan="1" rowspan="1"><p>Pattern</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Varied inputs needing adaptive routing to specialized agents</p>
+</td><td colspan="1" rowspan="1"><p><strong>Coordinator</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Complex, ambiguous tasks requiring multi-level decomposition</p>
+</td><td colspan="1" rowspan="1"><p><strong>Hierarchical Task Decomposition</strong></p>
+</td></tr>
+</table>
+<p><strong>Iterative workflows</strong> — repeat execution until a condition is met:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>If your task looks like this...</p>
+</td><td colspan="1" rowspan="1"><p>Pattern</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Automated repetition with a predefined termination condition</p>
+</td><td colspan="1" rowspan="1"><p><strong>Loop</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Output requires distinct validation before completion</p>
+</td><td colspan="1" rowspan="1"><p><strong>Review and Critique</strong></p>
+</td></tr>
+</table>
+<p><strong>Special requirements:</strong></p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>If your task looks like this...</p>
+</td><td colspan="1" rowspan="1"><p>Pattern</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>High-stakes decisions requiring human judgment or approval</p>
+</td><td colspan="1" rowspan="1"><p><strong>Human-in-the-Loop</strong></p>
+</td></tr>
+</table>
+<p><strong>Start simple:</strong> A non-agentic solution (a single LLM call) may be more cost-effective for predictable tasks like summarization or classification. Only add agents when the task genuinely requires multi-step reasoning, iteration, or parallelism.</p>
+<h2 is-upgraded>The constraints that drive your choice</h2>
+<p><strong>Cost and latency</strong> Every agent hop is an extra LLM call. A 5-agent pipeline uses at least 5× the tokens of a single agent. Parallel agents reduce latency but increase concurrent cost. If budget is tight: use deterministic patterns, smaller models for simple steps, or replace LLM agents with plain Python functions.</p>
+<p><strong>Determinism vs flexibility</strong> Deterministic patterns (Sequential, Parallel, Loop) are faster and more predictable — the code controls the flow. Dynamic patterns (Coordinator, Hierarchical) are more flexible but add routing overhead and are harder to debug.</p>
+<p><strong>Safety and human oversight</strong> Fully automated pipelines work well for low-stakes tasks like content generation. For financial, medical, or legal decisions, use Human-in-the-Loop — the agent pauses at checkpoints for human review before acting.</p>
+<h2 is-upgraded>How this codelab maps to the framework</h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Stage</p>
+</td><td colspan="1" rowspan="1"><p>Pattern</p>
+</td><td colspan="1" rowspan="1"><p>Why</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Research → Draft</p>
+</td><td colspan="1" rowspan="1"><p><strong>Sequential</strong></p>
+</td><td colspan="1" rowspan="1"><p>Draft always depends on research — fixed order, no model routing needed</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Draft → Quality check → Improve</p>
+</td><td colspan="1" rowspan="1"><p><strong>Review and Critique</strong> inside a <strong>Loop</strong></p>
+</td><td colspan="1" rowspan="1"><p>Critic evaluates, generator revises; repeats until quality threshold met</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Blog + Social + Email + SEO</p>
+</td><td colspan="1" rowspan="1"><p><strong>Parallel</strong></p>
+</td><td colspan="1" rowspan="1"><p>All four are independent — run concurrently to reduce latency</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Route create vs analyse</p>
+</td><td colspan="1" rowspan="1"><p><strong>Coordinator</strong></p>
+</td><td colspan="1" rowspan="1"><p>User intent is open-ended — model decides which pipeline to invoke</p>
+</td></tr>
+</table>
+<p>Keep this table in mind as you build each piece in the following steps.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Sequential Workflow — Research and Draft" duration="15">
         <h2 is-upgraded>SequentialAgent</h2>
 <p>A <code>SequentialAgent</code> runs its <code>sub_agents</code> list in strict left-to-right order. Each agent completes before the next one starts. This is perfect for pipelines where step 2 depends on the output of step 1.</p>
 <pre><code>SequentialAgent
@@ -549,11 +579,15 @@ coordinator/orchestrator
     sub_agents=[topic_research_agent, content_drafter_agent],
 )
 </code></pre>
-<p>For testing this step, temporarily set <code>root_agent</code> to point to this workflow:</p>
-<pre><code language="language-python" class="language-python">root_agent = research_and_draft_workflow
+<p>For testing this step, temporarily update the last line of <code>agent.py</code>:</p>
+<pre><code language="language-python" class="language-python"># Change this:
+root_agent = master_orchestrator_agent
+
+# To this:
+root_agent = research_and_draft_workflow
 </code></pre>
 <h2 is-upgraded>Test the sequential workflow</h2>
-<pre><code language="language-bash" class="language-bash">adk web
+<pre><code language="language-bash" class="language-bash">adk web --port 8080 --reload_agents
 </code></pre>
 <p>Enter the prompt:</p>
 <pre><code>Write a blog about sustainable packaging for eco-conscious millennials
@@ -561,53 +595,7 @@ coordinator/orchestrator
 <p>Watch the <strong>Events</strong> panel — you&#39;ll see <code>topic_research_agent</code> fire first, then <code>content_drafter_agent</code>. In the <strong>State</strong> tab, both <code>blog_topic</code> and <code>current_content</code> keys will appear in sequence.</p>
 <p><strong>Tip:</strong> Click on any event in the Events panel to inspect the exact request and response sent to the model at that step.</p>
 <p><strong>Before moving on:</strong> Remove the temporary <code>root_agent = research_and_draft_workflow</code> line from <code>agent.py</code>.</p>
-<h2 is-upgraded>Design patterns: LLM-Driven vs Workflow-Driven</h2>
-<p>You&#39;ve now used both types of agents. It&#39;s worth understanding when to choose each:</p>
-<p><strong>LLM-Driven (plain </strong></p>
-<p><strong><code>Agent</code></strong></p>
-<p><strong>)</strong> — the model decides the sequence of steps.</p>
-<ul>
-<li>The LLM reads the instruction, decides what tools to call or which sub-agent to transfer to, and determines when it&#39;s done.</li>
-<li>Best when: the task is open-ended, the steps aren&#39;t fully predictable, or you need the model&#39;s judgment to adapt.</li>
-<li>Example: <code>master_orchestrator_agent</code> — it decides whether a request is for content creation or analysis.</li>
-</ul>
-<p><strong>Workflow-Driven (</strong></p>
-<p><strong><code>SequentialAgent</code></strong></p>
-<p><strong>, </strong></p>
-<p><strong><code>LoopAgent</code></strong></p>
-<p><strong>, </strong></p>
-<p><strong><code>ParallelAgent</code></strong></p>
-<p><strong>)</strong> — the structure decides the sequence.</p>
-<ul>
-<li>The agent type enforces the execution order. There is no LLM involved in the routing itself.</li>
-<li>Best when: the steps are deterministic, the order always the same, and you want reliability and speed over flexibility.</li>
-<li>Example: <code>research_and_draft_workflow</code> — topic research <em>always</em> runs before drafting. Always.</li>
-</ul>
-<table>
-<tr><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"><p>LLM-Driven</p>
-</td><td colspan="1" rowspan="1"><p>Workflow-Driven</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p>Who controls the order?</p>
-</td><td colspan="1" rowspan="1"><p>The model</p>
-</td><td colspan="1" rowspan="1"><p>The agent type</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p>Flexibility</p>
-</td><td colspan="1" rowspan="1"><p>High — adapts to input</p>
-</td><td colspan="1" rowspan="1"><p>Low — fixed sequence</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p>Predictability</p>
-</td><td colspan="1" rowspan="1"><p>Lower</p>
-</td><td colspan="1" rowspan="1"><p>Higher</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p>Speed</p>
-</td><td colspan="1" rowspan="1"><p>Slower (extra LLM calls for routing)</p>
-</td><td colspan="1" rowspan="1"><p>Faster (no routing overhead)</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p>Best for</p>
-</td><td colspan="1" rowspan="1"><p>Open-ended orchestration</p>
-</td><td colspan="1" rowspan="1"><p>Known, repeatable pipelines</p>
-</td></tr>
-</table>
+<p><strong>Pattern in practice: </strong><code>research_and_draft_workflow</code> is a classic <strong>workflow-driven</strong> pipeline — topic research <em>always</em> runs before drafting, with no LLM making that routing decision. This is exactly the &#34;deterministic steps → Sequential&#34; case from the architecture decision framework you reviewed earlier.</p>
 <p><strong>The key insight:</strong> Use LLM-Driven agents at the <em>boundaries</em> where human intent is ambiguous (the orchestrator that routes between content creation and analysis). Use Workflow-Driven agents <em>inside</em> those boundaries where the steps are well-defined (the pipeline that runs research → draft → quality → publish).</p>
 <p>In your Content Creation Studio:</p>
 <ul>
@@ -750,7 +738,7 @@ quality_improvement_loop = LoopAgent(
 )
 root_agent = two_phase_pipeline
 </code></pre>
-<p>Run <code>adk web</code> and enter the same prompt. In the Events panel, you&#39;ll now see multiple passes: research → draft → quality check → improve → quality check → (exit or max reached).</p>
+<p>Run <code>adk web --port 8080 --reload_agents</code> and enter the same prompt. In the Events panel, you&#39;ll now see multiple passes: research → draft → quality check → improve → quality check → (exit or max reached).</p>
 <p><strong>Before moving on:</strong> Remove the temporary <code>root_agent = two_phase_pipeline</code> line from <code>agent.py</code>.</p>
 
 
@@ -857,7 +845,7 @@ parallel_content_creation = ParallelAgent(
 )
 </code></pre>
 <h2 is-upgraded>Test</h2>
-<p>Run <code>adk web</code> with <code>root_agent = parallel_content_creation</code> (temporarily). Enter any topic. All four <code>output_key</code> values — <code>final_blog_post</code>, <code>social_media_posts</code>, <code>email_newsletter</code>, <code>seo_metadata</code> — should appear in the State tab simultaneously.</p>
+<p>Run <code>adk web --port 8080 --reload_agents</code> with <code>root_agent = parallel_content_creation</code> (temporarily). Enter any topic. All four <code>output_key</code> values — <code>final_blog_post</code>, <code>social_media_posts</code>, <code>email_newsletter</code>, <code>seo_metadata</code> — should appear in the State tab simultaneously.</p>
 <p><strong>Before moving on:</strong> Remove the temporary <code>root_agent = parallel_content_creation</code> line from <code>agent.py</code>.</p>
 
 
@@ -964,7 +952,7 @@ root_agent = master_orchestrator_agent
 <p><strong><code>AgentTool</code></strong></p>
 <p><strong>:</strong> Using <code>sub_agents=</code> means inner agent events propagate to the <code>Runner</code> and are visible externally (needed for the FastAPI SSE backend to detect which channel agent produced which output). Using <code>AgentTool</code> wraps the agent as an opaque tool call — inner events are hidden. See Step 7 for the full trade-off discussion.</p>
 <h2 is-upgraded>Test routing</h2>
-<pre><code language="language-bash" class="language-bash">adk web
+<pre><code language="language-bash" class="language-bash">adk web --port 8080 --reload_agents
 </code></pre>
 <p><strong>Test the analyzer route:</strong></p>
 <pre><code>Analyze this text: Artificial intelligence is transforming the way businesses operate.
@@ -1086,7 +1074,7 @@ def after_model_callback(
     return None  # Use the model response as-is
 </code></pre>
 <h2 is-upgraded>Test the guardrail</h2>
-<pre><code language="language-bash" class="language-bash">adk web
+<pre><code language="language-bash" class="language-bash">adk web --port 8080 --reload_agents
 </code></pre>
 <p>Enter:</p>
 <pre><code>Create content about violence and illegal activities
@@ -1214,7 +1202,7 @@ await tool_context.save_artifact(filename=&#34;user:blog_post.md&#34;, artifact=
 <p>The <strong>write side</strong> is already handled: the <code>after_agent_callback</code> you implemented in Step 14 calls <code>await memory_service.add_session_to_memory(session)</code> after every agent turn.</p>
 <p>The <strong>read side</strong> is <code>PreloadMemoryTool</code> — ADK automatically invokes it before each turn to inject relevant past sessions into the model&#39;s context. You already wired it into <code>master_orchestrator_agent</code> in Step 13, so no code changes are needed here.</p>
 <h2 is-upgraded>Test cross-session memory</h2>
-<p>Run <code>adk web</code> and open two separate sessions:</p>
+<p>Run <code>adk web --port 8080 --reload_agents</code> and open two separate sessions:</p>
 <p><strong>Session 1:</strong></p>
 <pre><code>Create content about Python async programming for backend developers
 </code></pre>
@@ -1541,5 +1529,49 @@ Deployed on:
   <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
+
+  <style>
+    .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-family: 'Roboto', sans-serif;
+      cursor: pointer;
+      background: #f8f8f8;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #444;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    pre:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: #e8e8e8; }
+    .copy-btn.copied { color: #1e8e3e; border-color: #1e8e3e; }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('pre').forEach(function (pre) {
+        var code = pre.querySelector('code');
+        if (!code) return;
+        pre.style.position = 'relative';
+        var btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        pre.appendChild(btn);
+        btn.addEventListener('click', function () {
+          navigator.clipboard.writeText(code.innerText).then(function () {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(function () {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 2000);
+          });
+        });
+      });
+    });
+  </script>
 </body>
 </html>
