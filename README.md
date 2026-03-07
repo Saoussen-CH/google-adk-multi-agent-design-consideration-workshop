@@ -15,22 +15,24 @@ Interactive Jupyter notebooks to learn how to build multi-agent systems step by 
 | 1 | First Agent | Create your first AI agent with Google ADK | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part1_first_agent.ipynb) |
 | 2 | Custom Tools | Build custom tools for your agents | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part2_custom_tools.ipynb) |
 | 3 | Agent Teams | Coordinate multiple agents working together | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part3_agent_teams.ipynb) |
-| 4 | Sequential Workflows & Design Patterns | Sequential pipelines + when to use LLM vs workflow agents | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part4_sequential_workflows_and_design_patterns.ipynb) |
-| 5 | Iterative Workflows | Create quality improvement loops | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part5_iterative_workflows.ipynb) |
-| 6 | Parallel Workflows | Execute agents in parallel for efficiency | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part6_parallel_workflows.ipynb) |
-| 7 | Callbacks, Context & Memory | Callbacks, sessions/state, artifacts, and memory, including ADK's LoggingPlugin for local observability | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part7_callbacks_context_memory.ipynb) |
-| 8 | Capstone Project | Build the complete Content Creation Studio | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part8_capstone_project.ipynb) |
-| 9 | Deployment | Deploy agents to Agent Engine on GCP | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part9_deployment_agent_engine.ipynb) |
-| 10 | Full-Stack Cloud Run | Deploy full-stack app (React + FastAPI) to Cloud Run | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part10_fullstack_cloud_run.ipynb) |
+| 4 | Architecture Patterns | LLM-Driven vs Workflow-Driven architectures and design trade-offs | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part4_architecture_patterns.ipynb) |
+| 5 | Sequential Workflows | Sequential pipelines and agent coordination | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part5_sequential_workflows.ipynb) |
+| 6 | Iterative Workflows | Create quality improvement loops | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part6_iterative_workflows.ipynb) |
+| 7 | Parallel Workflows | Execute agents in parallel for efficiency | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part7_parallel_workflows.ipynb) |
+| 8 | Callbacks, Context & Memory | Callbacks, sessions/state, artifacts, and memory, including ADK's LoggingPlugin for local observability | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part8_callbacks_context_memory.ipynb) |
+| 9 | Capstone Project | Build the complete Content Creation Studio | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part9_capstone_project.ipynb) |
+| 10 | Deployment | Deploy agents to Agent Engine on GCP | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part10_deployment_agent_engine.ipynb) |
+| 11 | Full-Stack Cloud Run | Deploy full-stack app (React + FastAPI) to Cloud Run | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/blob/main/notebooks/part11_fullstack_cloud_run.ipynb) |
 
 ### Workshop Learning Path
 
 1. **Part 1-2**: Foundations - Learn basic agent creation and custom tools
-2. **Part 3-6**: Advanced Patterns - Master agent coordination, workflows, and design patterns
-3. **Part 7**: Callbacks, Context & Memory - Callbacks, sessions/state, artifacts, and long-term memory
-4. **Part 8**: Capstone Project - Build the complete Content Creation Studio
-5. **Part 9**: Deployment - Deploy to Vertex AI Agent Engine on GCP
-6. **Part 10**: Full-Stack Cloud Run - Deploy the full-stack app (React + FastAPI + Agent Engine) to Cloud Run
+2. **Part 3-4**: Agent Teams & Architecture Patterns - Coordinate agents and explore design trade-offs
+3. **Part 5-7**: Workflows - Master sequential, iterative, and parallel agent workflows
+4. **Part 8**: Callbacks, Context & Memory - Callbacks, sessions/state, artifacts, and long-term memory
+5. **Part 9**: Capstone Project - Build the complete Content Creation Studio
+6. **Part 10**: Deployment - Deploy to Vertex AI Agent Engine on GCP
+7. **Part 11**: Full-Stack Cloud Run - Deploy the full-stack app (React + FastAPI + Agent Engine) to Cloud Run
 
 **Tip**: Each notebook is self-contained and can be run independently in Google Colab. No local setup required!
 
@@ -421,17 +423,18 @@ lsof -ti:5173 | xargs kill -9  # Frontend
 
 ```
 content_creation_mas/
-├── notebooks/                 # Workshop notebooks (Parts 1-10)
+├── notebooks/                 # Workshop notebooks (Parts 1-11)
 │   ├── part1_first_agent.ipynb
 │   ├── part2_custom_tools.ipynb
 │   ├── part3_agent_teams.ipynb
-│   ├── part4_sequential_workflows_and_design_patterns.ipynb
-│   ├── part5_iterative_workflows.ipynb
-│   ├── part6_parallel_workflows.ipynb
-│   ├── part7_callbacks_context_memory.ipynb
-│   ├── part8_capstone_project.ipynb
-│   ├── part9_deployment_agent_engine.ipynb
-│   └── part10_fullstack_cloud_run.ipynb
+│   ├── part4_architecture_patterns.ipynb
+│   ├── part5_sequential_workflows.ipynb
+│   ├── part6_iterative_workflows.ipynb
+│   ├── part7_parallel_workflows.ipynb
+│   ├── part8_callbacks_context_memory.ipynb
+│   ├── part9_capstone_project.ipynb
+│   ├── part10_deployment_agent_engine.ipynb
+│   └── part11_fullstack_cloud_run.ipynb
 ├── backend/                   # FastAPI backend (Cloud Run)
 │   ├── api_server.py         # API server that connects to Agent Engine
 │   └── requirements.txt
