@@ -1,15 +1,14 @@
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
 from content_creation_studio.artifacts import (
     save_content_artifact,
     list_content_artifacts,
     load_content_artifact,
 )
-from content_creation_studio.config import MODEL_NAME, RETRY_CONFIG
+from content_creation_studio.config import MODEL_NAME
 
 final_packager_agent = Agent(
     name="final_packager_agent",
-    model=Gemini(model=MODEL_NAME, retry_options=RETRY_CONFIG),
+    model=MODEL_NAME,
     instruction="""
     You are a content package coordinator. Assemble the final deliverable.
 

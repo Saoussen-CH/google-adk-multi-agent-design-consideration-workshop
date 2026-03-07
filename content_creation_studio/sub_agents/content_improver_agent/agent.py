@@ -1,12 +1,11 @@
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
 from google.adk.tools import FunctionTool
 from content_creation_studio.tools import exit_loop, QUALITY_THRESHOLD_MET
-from content_creation_studio.config import MODEL_NAME, RETRY_CONFIG
+from content_creation_studio.config import MODEL_NAME
 
 content_improver_agent = Agent(
       name="content_improver_agent",
-      model=Gemini(model=MODEL_NAME, retry_options=RETRY_CONFIG),
+      model=MODEL_NAME,
       instruction=f"""
       Current content: {{{{current_content}}}}
       Feedback: {{{{quality_feedback}}}}

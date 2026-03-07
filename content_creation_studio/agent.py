@@ -5,9 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, Agent
-from google.adk.models.google_llm import Gemini
 from google.adk.tools import preload_memory_tool
-from content_creation_studio.config import MODEL_NAME, RETRY_CONFIG, MAX_IMPROVEMENT_ITERATIONS
+from content_creation_studio.config import MODEL_NAME, MAX_IMPROVEMENT_ITERATIONS
 from content_creation_studio.callbacks import (
     before_agent_callback,
     after_agent_callback,
@@ -65,7 +64,7 @@ full_content_workflow = SequentialAgent(
 # The LLM transfers control to the appropriate sub-agent based on user intent.
 master_orchestrator_agent = Agent(
     name="master_orchestrator_agent",
-    model=Gemini(model=MODEL_NAME, retry_options=RETRY_CONFIG),
+    model=MODEL_NAME,
     instruction="""
     You are the Master Content Creation Studio orchestrator. Delegate tasks to specialists.
 

@@ -1,10 +1,9 @@
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
-from content_creation_studio.config import MODEL_NAME, RETRY_CONFIG
+from content_creation_studio.config import MODEL_NAME
 
 blog_post_writer_agent = Agent(
     name="blog_post_writer_agent",
-    model=Gemini(model=MODEL_NAME, retry_options=RETRY_CONFIG),
+    model=MODEL_NAME,
     instruction="""
     You are a professional blog writer. Create the final polished blog post from: {{current_content}}
 

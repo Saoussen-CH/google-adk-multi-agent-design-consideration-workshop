@@ -1,10 +1,9 @@
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
-from content_creation_studio.config import MODEL_NAME, RETRY_CONFIG
+from content_creation_studio.config import MODEL_NAME
 
 email_newsletter_writer_agent = Agent(
     name="email_newsletter_writer_agent",
-    model=Gemini(model=MODEL_NAME, retry_options=RETRY_CONFIG),
+    model=MODEL_NAME,
     instruction="""
     You are an email marketing specialist. Create a newsletter from: {{current_content}}
 

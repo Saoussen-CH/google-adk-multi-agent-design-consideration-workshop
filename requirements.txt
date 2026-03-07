@@ -4,7 +4,7 @@
 
 # Core Agent Development Kit
 google-cloud-aiplatform[agent_engines]>=1.112  # Vertex AI Platform with Agent Engine support
-google-adk==1.24.1  # Google Agent Development Kit (latest)
+google-adk==1.26.0  # Google Agent Development Kit (latest)
 
 # FastAPI Backend
 fastapi>=0.115.0  # Modern web framework for building APIs

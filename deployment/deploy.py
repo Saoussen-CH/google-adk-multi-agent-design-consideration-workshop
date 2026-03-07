@@ -108,8 +108,8 @@ def deploy_to_agent_engine():
     remote_app = agent_engines.create(
         agent_engine=adk_app,
         requirements=[
-            "google-cloud-aiplatform[agent_engines]>=1.112",
-            "google-adk==1.24.1",
+            "google-cloud-aiplatform[agent_engines]>=1.132.0,<2.0.0",
+            "google-adk==1.26.0",
             "requests",
             "numpy>=1.24.0",
             "vertexai>=1.38.0",

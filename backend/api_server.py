@@ -164,7 +164,11 @@ async def create_content(request: ContentRequest):
                     event_count += 1
 
                     if not isinstance(event, dict):
+                        print(f"DEBUG non-dict event type={type(event)}: {event}")
                         continue
+
+                    # Debug: log event structure to understand shape
+                    print(f"DEBUG event keys={list(event.keys())} author={event.get('author')} content_type={type(event.get('content'))}")
 
                     # Extract author and text from the event
                     author = event.get("author", "")

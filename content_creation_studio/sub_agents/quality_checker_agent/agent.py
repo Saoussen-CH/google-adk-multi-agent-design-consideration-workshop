@@ -1,12 +1,11 @@
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
 from google.adk.tools import FunctionTool
 from content_creation_studio.tools import calculate_content_quality_score, QUALITY_THRESHOLD_MET
-from content_creation_studio.config import MODEL_NAME, RETRY_CONFIG
+from content_creation_studio.config import MODEL_NAME
 
 quality_checker_agent = Agent(
     name="quality_checker_agent",
-    model=Gemini(model=MODEL_NAME, retry_options=RETRY_CONFIG),
+    model=MODEL_NAME,
     instruction=f"""
     You are a content quality analyst. Analyze: {{{{current_content}}}}
 
