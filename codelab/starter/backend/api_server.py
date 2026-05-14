@@ -1,4 +1,4 @@
-"""FastAPI server to expose the content creation agent via Agent Engine."""
+"""FastAPI server to expose the content creation agent via Gemini Enterprise Agent Runtime."""
 
 import os
 import asyncio
@@ -17,7 +17,7 @@ load_dotenv()
 
 from vertexai import agent_engines
 
-# Get Agent Engine resource name from environment
+# Get Agent Runtime resource name from environment
 # Allow it to be missing at startup for health checks, but required for actual API calls
 AGENT_RESOURCE_NAME = os.environ.get("AGENT_RESOURCE_NAME") or os.environ.get("AGENT_ENGINE_RESOURCE_NAME")
 
@@ -39,7 +39,7 @@ if AGENT_RESOURCE_NAME:
     try:
         remote_agent = agent_engines.get(AGENT_RESOURCE_NAME)
     except Exception as e:
-        print(f"Warning: Failed to connect to Agent Engine: {e}")
+        print(f"Warning: Failed to connect to Agent Runtime: {e}")
         print(f"The server will start but API calls will fail.")
 
 
@@ -123,7 +123,7 @@ async def create_content(request: ContentRequest):
     if not remote_agent:
         raise HTTPException(
             status_code=503,
-            detail="Agent Engine not configured. Set AGENT_RESOURCE_NAME environment variable."
+            detail="Agent Runtime not configured. Set AGENT_RESOURCE_NAME environment variable."
         )
 
     try:
@@ -235,7 +235,7 @@ async def analyze_text(request: AnalyzeRequest):
     if not remote_agent:
         raise HTTPException(
             status_code=503,
-            detail="Agent Engine not configured. Set AGENT_RESOURCE_NAME environment variable."
+            detail="Agent Runtime not configured. Set AGENT_RESOURCE_NAME environment variable."
         )
 
     try:
@@ -289,7 +289,7 @@ if __name__ == "__main__":
     if not AGENT_RESOURCE_NAME:
         print("⚠️  WARNING: AGENT_RESOURCE_NAME not found in environment variables!")
         print("   The server will start, but API calls will fail until configured.")
-        print("   Deploy your agent to Agent Engine first and set this variable.")
+        print("   Deploy your agent to Agent Runtime first and set this variable.")
     else:
         print(f"🤖 Connected to Agent: {AGENT_RESOURCE_NAME}")
 

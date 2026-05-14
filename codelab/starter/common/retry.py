@@ -6,7 +6,10 @@ by default). Pass `generate_content_config=GENERATE_CONTENT_CONFIG` to every
 LlmAgent so each model call retries with exponential backoff before giving up.
 """
 
+from dotenv import load_dotenv
 from google.genai import types
+
+load_dotenv()
 
 RETRY_CONFIG = types.HttpRetryOptions(
     attempts=3,

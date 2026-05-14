@@ -1,8 +1,9 @@
+import os
 from google.adk.agents import Agent
 from google.adk.tools import google_search
 from common.callbacks import inject_current_date
 from common.retry import GENERATE_CONTENT_CONFIG
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 topic_research_agent = Agent(
     name="topic_research_agent",

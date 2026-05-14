@@ -1,7 +1,8 @@
+import os
 from google.adk.agents import Agent
 from common.callbacks import inject_current_date
 from common.retry import GENERATE_CONTENT_CONFIG
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 social_media_creator_agent = Agent(
     name="social_media_creator_agent",

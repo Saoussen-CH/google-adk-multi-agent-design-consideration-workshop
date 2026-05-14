@@ -32,7 +32,7 @@ def _extract_session_id(session) -> str:
 
 
 # =============================================================================
-# AGENT CALLBACKS
+# AGENT CALLBACKS — Section 11
 # =============================================================================
 
 def before_agent_callback(callback_context: CallbackContext) -> Optional[types.Content]:
@@ -73,7 +73,7 @@ async def after_agent_callback(callback_context: CallbackContext) -> Optional[ty
 
 
 # =============================================================================
-# MODEL CALLBACKS
+# MODEL CALLBACKS — Section 11
 # =============================================================================
 
 def before_model_callback(

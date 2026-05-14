@@ -4,6 +4,7 @@ from typing import List
 
 def count_words(text: str) -> int:
     """Counts the number of words in the provided text."""
+    # --- Section 5: Agent with custom tools ---
     # TODO: #REPLACE-count-words
     # Split text on whitespace and return the count.
     print(f"🔧 Tool: Counting words...")

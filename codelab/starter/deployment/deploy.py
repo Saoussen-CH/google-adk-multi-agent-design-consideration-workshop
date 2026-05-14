@@ -1,10 +1,10 @@
 """
-Deployment Script for Multi-Agent Customer Support System
+Deployment Script for Content Creation Multi-Agent System
 ==========================================================
 This script handles:
-1. Local testing of the agent
-2. Deployment to Vertex AI Agent Engine
-3. Testing the deployed agent
+1. Deployment to Gemini Enterprise Agent Runtime
+2. Testing the deployed agent
+3. Cleanup
 
 Prerequisites:
 - Google Cloud Project with Vertex AI API enabled
@@ -12,7 +12,7 @@ Prerequisites:
 - A GCS bucket for staging
 
 Usage:
-    python deployment/deploy.py --action [test_local|deploy|test_remote|cleanup]
+    python deployment/deploy.py --action [deploy|test_remote|cleanup]
 
 """
 
@@ -41,13 +41,44 @@ load_dotenv()
 # CONFIGURATION - Loaded from environment variables
 # =============================================================================
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "project-ddc15d84-7238-4571-a39")
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
-STAGING_BUCKET = os.getenv("GOOGLE_CLOUD_STORAGE_BUCKET", "gs://content-creation-studio-adk-staging")
+STAGING_BUCKET = os.getenv("GOOGLE_CLOUD_STORAGE_BUCKET")
 DISPLAY_NAME = "content-creation-multiagentsystem"
+
+if not PROJECT_ID:
+    raise EnvironmentError("GOOGLE_CLOUD_PROJECT is not set. Copy .env.example to .env and fill in your project ID.")
+if not STAGING_BUCKET:
+    raise EnvironmentError("GOOGLE_CLOUD_STORAGE_BUCKET is not set. Copy .env.example to .env and set your staging bucket.")
 
 # For Express Mode (no GCP project required):
 # API_KEY = "your-express-mode-api-key"
+
+
+# =============================================================================
+# HELPERS
+# =============================================================================
+
+def update_env_file(key: str, value: str):
+    """Write or update a key=value pair in the .env file in the project root."""
+    env_path = project_root / ".env"
+    if not env_path.exists():
+        env_path.write_text(f"{key}={value}\n")
+        print(f"  Created .env with {key}")
+        return
+
+    lines = env_path.read_text().splitlines(keepends=True)
+    updated = False
+    for i, line in enumerate(lines):
+        if line.startswith(f"{key}=") or line.startswith(f"{key} ="):
+            lines[i] = f"{key}={value}\n"
+            updated = True
+            break
+    if not updated:
+        lines.append(f"{key}={value}\n")
+
+    env_path.write_text("".join(lines))
+    print(f"  .env updated: {key}={value}")
 
 
 # =============================================================================
@@ -80,45 +111,37 @@ def init_vertex_ai():
 # =============================================================================
 
 def deploy_to_agent_engine():
-    """Deploy the agent to Vertex AI Agent Engine with Memory Bank."""
+    """Deploy the agent to Gemini Enterprise Agent Runtime."""
     print("\n" + "=" * 60)
-    print("DEPLOYING TO VERTEX AI AGENT ENGINE")
+    print("DEPLOYING TO GEMINI ENTERPRISE AGENT RUNTIME")
     print("=" * 60)
 
     init_vertex_ai()
 
-    # Initialize Vertex AI client (needed for update call)
-    client = vertexai.Client(project=PROJECT_ID, location=LOCATION)
-
-    # Wrap agent in AdkApp with observability
-    # Memory Bank will be enabled via update() after deployment
     adk_app = agent_engines.AdkApp(
         agent=root_agent,
         app_name="content_creation",  # CRITICAL: Required for Memory Bank scope
         plugins=[LoggingPlugin()],  # Enable comprehensive observability logging
     )
 
-    print("\n⏳ Step 1/3: Deploying agent (this may take several minutes)...")
+    print("\n⏳ Deploying agent (this may take several minutes)...")
 
     # Change to project root so extra_packages paths are relative in the tarball
     os.chdir(project_root)
 
-    # Step 1: Deploy agent using module-level agent_engines.create()
-    # Note: We need to know the agent_engine_id upfront for env vars, but we get it after creation
-    # So we'll create first, then update with env vars
-    remote_app = agent_engines.create(
+    agent_engine_resource = agent_engines.create(
         agent_engine=adk_app,
+        display_name=DISPLAY_NAME,
         requirements=[
             "google-cloud-aiplatform[agent_engines]>=1.132.0,<2.0.0",
-            "google-adk==1.26.0",
-            "requests",
-            "numpy>=1.24.0",
-            "vertexai>=1.38.0",
+            "google-adk[a2a]==1.31.1",
+            "google-genai>=1.70.0",
+            "google-cloud-storage>=2.10.0",
             "python-dotenv>=1.0.0",
-
+            "pydantic>=2.0.0",
+            "cloudpickle>=3.0.0",
         ],
         extra_packages=["agents", "common"],
-        display_name=DISPLAY_NAME,
         env_vars={
             "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "true",
             "OTEL_SEMCONV_STABILITY_OPT_IN": "gen_ai_latest_experimental",
@@ -126,13 +149,13 @@ def deploy_to_agent_engine():
             # Capture prompt/response as span events so they appear in the
             # Cloud Trace UI's span detail panel.
             "ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS": "true",
-            "GOOGLE_GENAI_USE_VERTEXAI": "true", 
+            "GOOGLE_GENAI_USE_VERTEXAI": "1",
 
         },
     )
 
     # Store resource name before updates (it may change after update calls)
-    resource_name = remote_app.resource_name
+    resource_name = agent_engine_resource.resource_name
     agent_engine_id = resource_name.split("/")[-1]
 
 
@@ -140,15 +163,15 @@ def deploy_to_agent_engine():
     print("✓ DEPLOYMENT SUCCESSFUL!")
     print("=" * 60)
     print(f"\nResource Name: {resource_name}")
-    print(f"Agent Engine ID: {agent_engine_id}")
+    print(f"Agent Runtime ID: {agent_engine_id}")
   
 
-    print(f"\nUpdate your .env file with:")
-    print(f'AGENT_ENGINE_RESOURCE_NAME="{resource_name}"')
+    update_env_file("AGENT_ENGINE_RESOURCE_NAME", resource_name)
+
     print(f"\nView in Cloud Console:")
     print(f"https://console.cloud.google.com/vertex-ai/agents/agent-engines?project={PROJECT_ID}")
 
-    return remote_app
+    return agent_engine_resource
 
 
 # =============================================================================
@@ -156,7 +179,7 @@ def deploy_to_agent_engine():
 # =============================================================================
 
 async def test_remote_agent(resource_name: str):
-    """Test the deployed agent on Agent Engine."""
+    """Test the deployed agent on Gemini Enterprise Agent Runtime."""
     print("\n" + "=" * 60)
     print("TESTING DEPLOYED AGENT")
     print("=" * 60)
@@ -164,11 +187,11 @@ async def test_remote_agent(resource_name: str):
     init_vertex_ai()
     
     # Connect to deployed agent
-    remote_app = agent_engines.get(resource_name)
+    agent_engine_resource = agent_engines.get(resource_name)
     print(f"✓ Connected to: {resource_name}")
     
     # Create remote session
-    remote_session = await remote_app.async_create_session(user_id="remote_test_user")
+    remote_session = await agent_engine_resource.async_create_session(user_id="remote_test_user")
     print(f"✓ Created remote session: {remote_session['id']}")
     
     # Test query
@@ -184,7 +207,7 @@ async def test_remote_agent(resource_name: str):
     print(f"USER: {test_query}")
     print(f"{'─' * 40}")
     
-    async for event in remote_app.async_stream_query(
+    async for event in agent_engine_resource.async_stream_query(
         user_id="remote_test_user",
         session_id=remote_session["id"],
         message=test_query,
@@ -218,8 +241,8 @@ def cleanup_deployment(resource_name: str):
     
     init_vertex_ai()
     
-    remote_app = agent_engines.get(resource_name)
-    remote_app.delete(force=True)  # force=True also deletes sessions
+    agent_engine_resource = agent_engines.get(resource_name)
+    agent_engine_resource.delete(force=True)  # force=True also deletes sessions
     
     print(f"✓ Deleted: {resource_name}")
     print("✓ Cleanup complete!")
@@ -231,7 +254,7 @@ def cleanup_deployment(resource_name: str):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Deploy Multi-Agent Customer Support to Vertex AI Agent Engine"
+        description="Deploy Content Creation Multi-Agent System to Gemini Enterprise Agent Runtime"
     )
     parser.add_argument(
         "--action",

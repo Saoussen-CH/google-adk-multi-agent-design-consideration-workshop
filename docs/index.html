@@ -28,7 +28,7 @@
                   environment="web"
                   feedback-link="https://github.com/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop/issues">
     
-      <google-codelab-step label="Introduction" duration="0">
+      <google-codelab-step label="Introduction" duration="5">
     <div style="background:#fff;padding:40px 48px 32px;border-bottom:1px solid #e0e0e0;">
       <div style="max-width:800px;margin:0 auto;">
         <div style="border:1px solid #dadce0;border-radius:8px;padding:32px;font-family:'Google Sans',Roboto,sans-serif;">
@@ -36,7 +36,7 @@
           <hr style="border:none;border-top:1px solid #dadce0;margin:0 0 20px 0;">
           <div style="display:flex;align-items:center;margin-bottom:16px;color:#5f6368;font-size:14px;">
             <svg style="margin-right:16px;flex-shrink:0;" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="#5f6368"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            <span>Last updated Apr 30, 2026</span>
+            <span>Last updated May 14, 2026</span>
           </div>
           <div style="display:flex;align-items:center;color:#5f6368;font-size:14px;">
             <div style="margin-right:16px;flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#bdc1c6;display:flex;align-items:center;justify-content:center;overflow:hidden;">
@@ -57,28 +57,6 @@
 <li><strong>FastAPI + React</strong> served from a single <strong>Cloud Run</strong> container</li>
 </ul>
 <p>This is not a chatbot demo. You will build, deploy, and access a real web application backed by a team of collaborating AI agents.</p>
-<h2 is-upgraded>The problem agents solve</h2>
-<table>
-<tr><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"><p>Single LLM call</p>
-</td><td colspan="1" rowspan="1"><p>Multi-Agent System</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Capability</strong></p>
-</td><td colspan="1" rowspan="1"><p>One task at a time</p>
-</td><td colspan="1" rowspan="1"><p>Parallel, sequential, and looping tasks</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Quality control</strong></p>
-</td><td colspan="1" rowspan="1"><p>No feedback loop</p>
-</td><td colspan="1" rowspan="1"><p>Iterative improvement with quality gates</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Scalability</strong></p>
-</td><td colspan="1" rowspan="1"><p>Limited by context window</p>
-</td><td colspan="1" rowspan="1"><p>Each agent owns a focused responsibility</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Example</strong></p>
-</td><td colspan="1" rowspan="1"><p>&#34;Write a blog post&#34;</p>
-</td><td colspan="1" rowspan="1"><p>Research → Draft → Improve → Generate blog + social + email + SEO - all from one request</p>
-</td></tr>
-</table>
 <h2 is-upgraded>What you&#39;ll build</h2>
 <p>You will build <strong>two layers</strong> of the same application:</p>
 <p><strong>Layer 1 - The Agent Pipeline</strong></p>
@@ -116,14 +94,11 @@
 <li>Basic Python familiarity (functions, classes, async/await)</li>
 <li>No frontend experience required - the React app is provided</li>
 </ul>
-<aside class="special"><p><strong>Note:</strong> This codelab runs entirely in <strong>Google Cloud Shell</strong>. No local install needed. Authentication is handled automatically via your GCP credentials - no API key required.</p>
-</aside>
-<p><a href="https://ssh.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop&cloudshell_git_branch=feature/per-agent-packages&cloudshell_tutorial=codelab/codelab.md&cloudshell_workspace=codelab/starter" target="_blank">Open in Cloud Shell</a></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Set Up Your Environment" duration="0">
+      <google-codelab-step label="Set Up Your Environment" duration="10">
         <h2 is-upgraded>Google Cloud Credits</h2>
 <aside class="special"><p>If you are attending an <strong>instructor-led workshop</strong>: Your instructor will provide you with a credit code. Please use the one they provide.</p>
 <p>If you are working through this Codelab <strong>on your own</strong>: You must use a personal account (e.g., <code>name@gmail.com</code>). Corporate or school-managed accounts will not work.</p>
@@ -151,46 +126,23 @@
 │  • Pre-authenticated with your Google account        │
 └──────────────────────────────────────────────────────┘
 </code></pre>
-<aside class="special"><p><strong><code>cloudshell edit</code></strong><strong> tip:</strong> All <code>cloudshell edit</code> commands in this codelab use paths relative to <code>~/workshop/codelab/starter</code>. Make sure your terminal is in that directory before running them. If you&#39;ve navigated elsewhere, run <code>cd ~/workshop/codelab/starter</code> first.</p>
-</aside>
 <aside class="warning"><p><strong>Note:</strong> If Cloud Shell goes idle for 20 minutes it will disconnect. If this happens, reconnect and run <code>cd ~/workshop/codelab/starter</code> to return to the working directory.</p>
 </aside>
-<h2 is-upgraded>Clone the repository</h2>
-<p>In the terminal, clone the repository and navigate to the starter directory:</p>
-<pre><code language="language-bash" class="language-bash">git clone -b codelab-release https://github.com/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop.git workshop
-cd workshop/codelab/starter
+<h2 is-upgraded>Authenticate and configure your project</h2>
+<p>Cloud Shell is already authenticated with your Google account. Confirm your active account and find your Project ID:</p>
+<pre><code language="language-bash" class="language-bash">gcloud config list
 </code></pre>
-<p>Key implementation sections are replaced with <code># TODO: #REPLACE-...</code> comments - you&#39;ll fill these in step by step.</p>
-<p>👀 <strong>Verify</strong> - your terminal prompt should now show the <code>starter</code> directory:</p>
-<pre><code language="language-text" class="language-text">...workshop/codelab/starter$
-</code></pre>
-<p>You&#39;re in the right folder.</p>
-<h2 is-upgraded>Install <code>uv</code> and project dependencies</h2>
-<p>This codelab uses <a href="https://docs.astral.sh/uv/" target="_blank">uv</a> for dependency management and packaging — the toolchain Google&#39;s ADK templates standardize on. It installs faster than <code>pip</code> and reads dependencies from <code>pyproject.toml</code>.</p>
-<p>Install <code>uv</code> (one-time, skip if already installed):</p>
-<pre><code language="language-bash" class="language-bash">pip install uv
-</code></pre>
-<p>Then install all project dependencies into a managed virtual environment:</p>
-<pre><code language="language-bash" class="language-bash">uv sync
-</code></pre>
-<p>This reads <code>pyproject.toml</code>, creates <code>.venv/</code> automatically, and installs <code>google-adk</code>, <code>google-cloud-aiplatform</code>, <code>fastapi</code>, <code>uvicorn</code>, and the local <code>agents</code>, <code>common</code>, <code>backend</code> packages in editable mode. It may take a minute on the first run.</p>
-<p>👀 <strong>Verify</strong> - the last line of output should show something like:</p>
-<pre><code language="language-text" class="language-text">Resolved N packages in ...
-Installed N packages in ...
-</code></pre>
-<p>Dependencies installed. From here on, prefix Python and ADK commands with <code>uv run</code> (e.g. <code>uv run adk web agents</code>) — this runs them inside the project&#39;s virtual environment without needing to manually <code>source .venv/bin/activate</code>.</p>
-<h2 is-upgraded>Configure your environment</h2>
-<p>First, confirm your active GCP project and set your Project ID:</p>
-<p>You can see your <strong>Project ID</strong> in the GCP Console dashboard. Copy it - you&#39;ll need it in the next command:</p>
-<p class="image-container"><img alt="Find your Project ID in the GCP Console and set it in Cloud Shell" src="img/1da5e7c9bc304a1d.jpg"></p>
-<pre><code language="language-bash" class="language-bash">gcloud config get-value project
+<p>Now capture your Project ID and region as shell variables — you&#39;ll use them throughout setup:</p>
+<pre><code language="language-bash" class="language-bash">export PROJECT_ID=$(gcloud config get-value project)
+export REGION=&#34;us-central1&#34;
+echo &#34;Project: $PROJECT_ID&#34;
 </code></pre>
 <p>Expected output:</p>
-<pre><code language="language-text" class="language-text">your-project-id
+<pre><code language="language-text" class="language-text">Project: my-project-123
 </code></pre>
-<aside class="warning"><p>If this is empty, set it with: <code>gcloud config set project YOUR_PROJECT_ID</code></p>
+<aside class="warning"><p>If <code>Project:</code> is blank, set it first: <code>gcloud config set project YOUR_PROJECT_ID</code>, then re-run the export commands above.</p>
 </aside>
-<p>Enable the required GCP APIs:</p>
+<h2 is-upgraded>Enable required APIs</h2>
 <pre><code language="language-bash" class="language-bash">gcloud services enable \
     aiplatform.googleapis.com \
     run.googleapis.com \
@@ -207,72 +159,123 @@ Installed N packages in ...
     observability.googleapis.com
 </code></pre>
 <p>This takes about 2 minutes. You&#39;ll see <code>Operation finished successfully</code> when done.</p>
-<p>Set up Application Default Credentials so the Vertex AI SDK can authenticate:</p>
+<h2 is-upgraded>Set up Application Default Credentials (ADC)</h2>
+<p>The agents call Vertex AI using the Google Auth library, which requires Application Default Credentials - separate from the <code>gcloud</code> CLI authentication.</p>
+<p>Run this once:</p>
 <pre><code language="language-bash" class="language-bash">gcloud auth application-default login
 </code></pre>
-<p>Follow the browser prompt to log in with your Google account. This writes credentials to <code>~/.config/gcloud/application_default_credentials.json</code>, which the ADK uses automatically when <code>GOOGLE_GENAI_USE_VERTEXAI=1</code>.</p>
-<p>Copy the example <code>.env</code> file and open it in the Cloud Shell editor:</p>
-<pre><code language="language-bash" class="language-bash">cp .env.example .env
-cloudshell edit .env
+<p>A browser tab will open asking you to confirm. Click <strong>Allow</strong>. You&#39;ll see:</p>
+<pre><code language="language-text" class="language-text">Credentials saved to file: ~/.config/gcloud/application_default_credentials.json
 </code></pre>
-<p>This opens the <code>.env</code> file in the Cloud Shell code editor panel.</p>
-<p>Fill in your project details - replace <code>your-project-id</code> with the value from the previous step:</p>
-<pre><code language="language-text" class="language-text">GOOGLE_CLOUD_PROJECT=your-project-id
-GOOGLE_CLOUD_LOCATION=us-central1
-GOOGLE_GENAI_USE_VERTEXAI=1
-</code></pre>
-<aside class="special"><p><strong>Why no API key?</strong> The <code>gcloud auth application-default login</code> command you ran sets up <strong>Application Default Credentials</strong>. Setting <code>GOOGLE_GENAI_USE_VERTEXAI=1</code> tells ADK to use those credentials with Vertex AI - no separate API key needed. This applies throughout the entire codelab.</p>
+<aside class="special"><p><strong>Why is this needed? </strong><code>gcloud auth login</code> authenticates the CLI. <code>gcloud auth application-default login</code> creates credentials that Python applications (your agents) use to call Google Cloud APIs. Without this, agents fail with <code>credentials could not be determined</code> errors. The two commands write to different places and must both be run.</p>
 </aside>
-<p>Save the file (<code>Ctrl+S</code> in the editor), then return to the terminal.</p>
+<h2 is-upgraded>Clone the starter repository</h2>
+<p>This codelab uses a <strong>starter repository</strong> - a skeleton project with all infrastructure in place (Dockerfiles, <code>pyproject.toml</code>, deploy scripts) but with the agent logic left for you to write.</p>
+<pre><code language="language-bash" class="language-bash">git clone -b codelab-release https://github.com/Saoussen-CH/google-adk-multi-agent-design-consideration-workshop.git workshop
+cd workshop/codelab/starter
+</code></pre>
+<p>Each <code>agent.py</code> contains <code># TODO</code> placeholders where you will write the agent logic.</p>
+<p>👀 <strong>Verify</strong> - your terminal prompt should now show the <code>starter</code> directory:</p>
+<pre><code language="language-text" class="language-text">...workshop/codelab/starter$
+</code></pre>
+<aside class="special"><p><strong><code>cloudshell edit</code></strong><strong> tip:</strong> All <code>cloudshell edit</code> commands in this codelab use paths relative to <code>~/workshop/codelab/starter</code>. Make sure your terminal is in that directory before running them. If you&#39;ve navigated elsewhere, run <code>cd ~/workshop/codelab/starter</code> first.</p>
+</aside>
+<h2 is-upgraded>Configure environment variables</h2>
+<p>Copy the example <code>.env</code> and inject your project ID in one step:</p>
+<pre><code language="language-bash" class="language-bash">cp .env.example .env
+sed -i &#34;s|GOOGLE_CLOUD_PROJECT=your-project-id|GOOGLE_CLOUD_PROJECT=${PROJECT_ID}|&#34; .env
+</code></pre>
+<p>👀 <strong>Verify</strong> the project was set correctly:</p>
+<pre><code language="language-bash" class="language-bash">grep GOOGLE_CLOUD_PROJECT .env
+</code></pre>
+<p>Expected output:</p>
+<pre><code language="language-text" class="language-text">GOOGLE_CLOUD_PROJECT=my-project-123
+</code></pre>
+<p>Open <code>.env</code> in the editor to review all settings:</p>
+<pre><code language="language-bash" class="language-bash">cloudshell edit .env
+</code></pre>
+<p>This opens <code>.env</code> as a tab in the Cloud Shell Editor. Click <strong>Open Editor</strong> in the toolbar if the editor panel is not visible.</p>
+<aside class="special"><p><strong>Note: </strong><code>.env</code> is a hidden file (starts with <code>.</code>). Running <code>ls</code> won&#39;t show it - use <code>ls -a</code> to confirm it was created. The Cloud Shell Editor also hides dotfiles in its file tree, so always open <code>.env</code> directly from the terminal with <code>cloudshell edit .env</code>.</p>
+</aside>
+<h2 is-upgraded>Install dependencies</h2>
+<p>We use <a href="https://docs.astral.sh/uv/" target="_blank"><code>uv</code></a> — a fast Python package manager that handles virtual environments and installs in a single tool. Cloud Shell already has <code>uv</code> installed.</p>
+<pre><code language="language-bash" class="language-bash">uv sync
+</code></pre>
+<p>The <code>uv sync</code> command reads <code>pyproject.toml</code>, creates a <code>.venv/</code> directory, and installs <code>google-adk</code>, <code>google-cloud-aiplatform</code>, <code>fastapi</code>, <code>uvicorn</code>, and the local <code>agents</code>, <code>common</code>, <code>backend</code> packages in editable mode. It may take a minute on the first run.</p>
+<p>👀 <strong>Verify</strong> - the last line of output should show something like:</p>
+<pre><code language="language-text" class="language-text">Resolved N packages in ...
+Installed N packages in ...
+</code></pre>
+<aside class="special"><p><strong>No manual activation needed.</strong> All commands in this codelab use <code>uv run</code>, which automatically activates the <code>.venv</code> in <code>~/workshop/codelab/starter/</code>. Just <code>cd</code> to the <code>starter</code> directory and prefix your command with <code>uv run</code>.</p>
+</aside>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="ADK Core Concepts" duration="0">
+      <google-codelab-step label="Understand Google ADK" duration="5">
         <h2 is-upgraded>What is an Agent?</h2>
-<p>An <strong>AI agent</strong> is a program that uses a large language model to decide what to do - not just what to say. Unlike a chatbot that answers one question at a time, an agent can:</p>
-<ul>
-<li>Use <strong>tools</strong> (search the web, call APIs, run code)</li>
-<li>Make <strong>decisions</strong> about which tool to use and in what order</li>
-<li><strong>Delegate</strong> subtasks to other specialized agents</li>
-<li>Maintain <strong>state</strong> across multiple steps to complete a long-horizon task</li>
-</ul>
-<p>The key shift: a chatbot <em>responds</em>. An agent <em>acts</em>.</p>
-<h2 is-upgraded>What is Google ADK?</h2>
-<p>The <strong>Agent Development Kit (ADK)</strong> is Google&#39;s open-source framework for building, evaluating, and deploying AI agents. It handles session state, tool calling, multi-agent coordination, streaming, and deployment - so you focus on the agent logic itself, not the infrastructure.</p>
-<p>ADK is model-agnostic but optimized for Gemini, and it runs the same way whether you&#39;re developing locally with <code>adk web</code> or scaling on Agent Runtime.</p>
-<h2 is-upgraded>The four building blocks</h2>
-<p><strong>Agent</strong> - a blueprint. Defines the instructions, model, and tools. It does not run itself.</p>
+<p><strong>What is an Agent?</strong> An agent is &#34;a self-contained execution unit designed to act autonomously to achieve specific goals.&#34; Agents can perform tasks, interact with users, utilize external tools, and coordinate with other agents.</p>
+<p><strong>Reference</strong>: <a href="https://google.github.io/adk-docs/agents/" target="_blank">ADK Agents Documentation</a></p>
+<h2 is-upgraded>What is ADK?</h2>
+<p>Agent Development Kit (ADK) is a flexible and modular framework for developing and deploying AI agents. While optimized for Gemini and the Google ecosystem, ADK is model-agnostic and deployment-agnostic. ADK was designed to make agent development feel more like software development - easier to create, deploy, and orchestrate agentic architectures ranging from simple tasks to complex workflows.</p>
+<p>ADK handles the complex parts - tool calling, multi-turn conversation, session state, streaming - so you can focus on the agent logic.</p>
+<h2 is-upgraded>Building blocks of an ADK agent</h2>
+<p>Every agent is composed of four building blocks:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Block</p>
+</td><td colspan="1" rowspan="1"><p>Role</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Model</strong></p>
+</td><td colspan="1" rowspan="1"><p>The LLM that reasons over goals, determines a plan, and generates responses</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Tools</strong></p>
+</td><td colspan="1" rowspan="1"><p>Functions that fetch data or perform actions by calling APIs or services</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Orchestration</strong></p>
+</td><td colspan="1" rowspan="1"><p>Maintains memory and state across turns, routes tool calls, passes results back to the model</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Runtime</strong></p>
+</td><td colspan="1" rowspan="1"><p>Executes the system when invoked - locally via <code>adk web</code>, or as a deployed service on Agent Runtime</p>
+</td></tr>
+</table>
+<h2 is-upgraded>Agent definition</h2>
+<p>Each agent in this codelab is defined the same way:</p>
 <pre><code language="language-python" class="language-python">from google.adk.agents import Agent
-agent = Agent(name=&#34;my_agent&#34;, model=&#34;gemini-2.5-flash&#34;, instruction=&#34;...&#34;)
+from google.adk.tools import google_search
+
+root_agent = Agent(
+    name=&#34;topic_research_agent&#34;,              # unique identifier
+    model=&#34;gemini-2.5-flash&#34;,                 # the LLM powering this agent
+    instruction=SYSTEM_INSTRUCTION,           # the agent&#39;s persona, constraints, and output format
+    description=&#34;Researches trending topics&#34;, # one-line summary used by orchestrators
+    tools=[google_search],                    # functions the LLM can call
+    output_key=&#34;blog_topic&#34;,                  # saves final response to session.state[&#34;blog_topic&#34;]
+)
 </code></pre>
-<p><strong>Session</strong> - a conversation instance. Holds the full message history and a shared <code>state</code> dictionary. All agents in the same session read and write the same <code>state</code> dict. Sessions are identified by <code>session_id</code> and <code>user_id</code>.</p>
-<p><strong>SessionService</strong> - a session database. Creates, stores, and retrieves sessions by <code>session_id</code>. In local development, ADK uses <code>InMemorySessionService</code> (resets when the process exits). On Agent Runtime, sessions are persisted automatically (via Agent Platform Sessions).</p>
-<p><strong>Runner</strong> - the execution engine. Takes an agent and a session service, then exposes <code>run_async()</code> which accepts a user message and yields a stream of events. When you run <code>adk web</code>, ADK creates a <code>Runner</code> internally.</p>
-<pre><code language="language-python" class="language-python">from google.adk.runners import Runner
-from google.adk.sessions import InMemorySessionService
-
-session_service = InMemorySessionService()
-runner = Runner(agent=my_agent, app_name=&#34;my_app&#34;, session_service=session_service)
-
-session = await session_service.create_session(app_name=&#34;my_app&#34;, user_id=&#34;user_1&#34;)
-
-async for event in runner.run_async(
-    user_id=&#34;user_1&#34;,
-    session_id=session.id,
-    new_message=types.Content(role=&#34;user&#34;, parts=[types.Part(text=&#34;Hello&#34;)])
-):
-    if event.is_final_response():
-        print(event.content.parts[0].text)
-</code></pre>
-<h2 is-upgraded>The event-driven execution model</h2>
-<p>When you call <code>runner.run_async()</code>, ADK yields a stream of <strong>events</strong>. Each event represents something that happened: a model call, a tool invocation, an agent transfer, or a final response. The last event with <code>is_final_response() == True</code> carries the agent&#39;s answer.</p>
-<p>This event stream is what the ADK Dev UI (<code>adk web</code>) displays in its Events panel - and what the FastAPI backend in the <strong>Full-Stack Cloud Run Deployment</strong> section consumes to stream results to the React frontend.</p>
-<h2 is-upgraded>How <code>adk web</code> fits in</h2>
-<p><code>adk web</code> is ADK&#39;s built-in development server. It scans the current directory for agent packages, wraps each discovered agent in a <code>Runner</code> with an <code>InMemorySessionService</code>, and serves a browser-based chat UI where you can send messages and inspect the full event stream in real time.</p>
-<p>You don&#39;t need to write <code>Runner</code> code yourself in this codelab - <code>adk web</code> handles it. But understanding what happens under the hood will help you interpret the Events panel and debug issues.</p>
-<h2 is-upgraded>The execution flow</h2>
-<p>Here is what happens every time you send a message to an ADK agent:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Field</p>
+</td><td colspan="1" rowspan="1"><p>Purpose</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>name</code></p>
+</td><td colspan="1" rowspan="1"><p>Unique ID - used by orchestrators to route calls</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>model</code></p>
+</td><td colspan="1" rowspan="1"><p>The Gemini model backing this agent</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>instruction</code></p>
+</td><td colspan="1" rowspan="1"><p>System prompt - defines the agent&#39;s role, constraints, and output format</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>description</code></p>
+</td><td colspan="1" rowspan="1"><p>One-line summary - the orchestrator reads this to decide which specialist to call</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>tools</code></p>
+</td><td colspan="1" rowspan="1"><p>Functions the LLM can invoke</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>output_key</code></p>
+</td><td colspan="1" rowspan="1"><p>Writes the agent&#39;s final response to <code>session.state[key]</code> for downstream agents to read</p>
+</td></tr>
+</table>
+<h2 is-upgraded>How ADK runs an agent</h2>
 <pre><code language="language-text" class="language-text">User message
     ↓
 Runner.run_async()        ← starts the event loop
@@ -287,38 +290,16 @@ Events stream back        ← Runner yields each step; final event has is_final_
     ↓
 Your code / adk web UI    ← reads events, displays the result
 </code></pre>
-<p>The <strong>Events panel</strong> in <code>adk web</code> shows you every step of this flow in real time.</p>
+<p>The LLM decides autonomously whether to call a tool, which tool, and with what arguments. You write the instruction - ADK handles the rest.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Your First Agent: Topic Research" duration="0">
+      <google-codelab-step label="Your First Agent: Topic Research" duration="10">
         <p>Open the <code>topic_research_agent</code> file:</p>
 <pre><code language="language-bash" class="language-bash">cloudshell edit agents/topic_research_agent/agent.py
 </code></pre>
-<h2 is-upgraded>The Agent constructor</h2>
-<p>Every ADK agent is defined with the <code>Agent</code> class. The key parameters:</p>
-<table>
-<tr><td colspan="1" rowspan="1"><p>Parameter</p>
-</td><td colspan="1" rowspan="1"><p>Purpose</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>name</code></p>
-</td><td colspan="1" rowspan="1"><p>Unique identifier - used by the orchestrator to route tasks</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>model</code></p>
-</td><td colspan="1" rowspan="1"><p>The Gemini model instance</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>instruction</code></p>
-</td><td colspan="1" rowspan="1"><p>The system prompt - tells the agent its role and behavior</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>tools</code></p>
-</td><td colspan="1" rowspan="1"><p>List of functions or tools the agent can call</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>output_key</code></p>
-</td><td colspan="1" rowspan="1"><p>If set, the agent&#39;s final text response is saved to <code>session.state[output_key]</code></p>
-</td></tr>
-</table>
-<h2 is-upgraded>How an agnet is declared in ADK</h2>
+<h2 is-upgraded>How an agent is declared in ADK</h2>
 <pre><code language="language-python" class="language-python"># topic_research_agent/agent.py
 from google.adk.agents import Agent
 from google.adk.tools import google_search
@@ -350,12 +331,15 @@ root_agent = topic_research_agent
 <aside class="special"><p><strong>Application-level retries:</strong> ADK agents interact with remote models and APIs that can occasionally time out or hit rate limits (429 errors). The <code>GENERATE_CONTENT_CONFIG</code> (imported from <code>common/retry.py</code>) is configured with 3 retries and a 120-second timeout. Passing this to <code>generate_content_config=</code> ensures your agent is robust against transient network errors and rate limits without you needing to write manual retry loops.</p>
 </aside>
 <p><strong>Why output_key?</strong> Without it, the agent&#39;s response exists only as a conversation message. With <code>output_key="blog_topic"</code>, ADK automatically writes the response text to <code>session.state["blog_topic"]</code> - making it available to every other agent in the pipeline via <code>{blog_topic}</code> templating.</p>
-<h2 is-upgraded>Test the agent</h2>
-<p><code>adk web</code> is ADK&#39;s built-in dev server. It discovers every agent package in your directory and serves a chat UI where you can test them interactively.</p>
-<p>Start it from the <code>starter/</code> directory:</p>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --port 8080 \
+<h2 is-upgraded>Test locally with ADK web UI</h2>
+<p>Now let&#39;s test the agent using the ADK web UI - a built-in chat interface for testing agents before deploying to cloud.</p>
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
     --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
+<aside class="special"><p><strong>Why </strong><strong><code>--allow_origins='*'</code></strong><strong>?</strong> Cloud Shell&#39;s Web Preview proxies your local server through a <code>*.cloudshell.dev</code> URL, which is a different origin than <code>127.0.0.1</code>. Without this flag, the dev UI gets blocked by CORS when creating a session and you&#39;ll see 403 Forbidden errors. The flag whitelists all origins - safe for local development.</p>
+</aside>
+<aside class="warning"><p><strong>&#34;No agents found in current folder&#34;?</strong> Make sure you ran the command from <code>starter/</code> (not from inside <code>agents/</code>). The <code>agents</code> argument tells <code>adk web</code> where to look.</p>
+</aside>
 <p>Then open it in your browser via <strong>Web Preview</strong>:</p>
 <ol type="1">
 <li>Click the <strong>Web Preview</strong> button (top-right of the Cloud Shell toolbar)</li>
@@ -373,7 +357,7 @@ root_agent = topic_research_agent
 
       </google-codelab-step>
     
-      <google-codelab-step label="Agent with custom tools" duration="0">
+      <google-codelab-step label="Agent with custom tools" duration="10">
         <p>Each agent that uses custom tools has its own <code>tools.py</code> inside its package. Open them in Cloud Shell Editor:</p>
 <pre><code language="language-bash" class="language-bash">cloudshell edit agents/content_analyzer_agent/tools.py
 cloudshell edit agents/quality_checker_agent/tools.py
@@ -445,7 +429,7 @@ agent = Agent(
 <p>One tool is left for you to implement so you experience writing an ADK tool yourself. Open <code>agents/content_analyzer_agent/tools.py</code>:</p>
 <pre><code language="language-bash" class="language-bash">cloudshell edit agents/content_analyzer_agent/tools.py
 </code></pre>
-<p>Find <code>count_words</code> — it has a <code># TODO</code> comment. Replace the <code>pass</code> with:</p>
+<p>Find the <code># TODO: #REPLACE-count-words</code> comment. Replace the <code>pass</code> with:</p>
 <pre><code language="language-python" class="language-python">    count = len(text.split())
     print(f&#34;   Result: {count} words&#34;)
     return count
@@ -453,7 +437,7 @@ agent = Agent(
 <h2 is-upgraded>See the agent use the tools</h2>
 <p>The unit test above calls the functions directly. Now run the actual agent so you can see the LLM decide <em>when</em> to call each tool and what to do with the results.</p>
 <p>Start the ADK web interface:</p>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --port 8080 \
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
     --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>content_analyzer_agent</code> from the dropdown, then send:</p>
@@ -476,7 +460,7 @@ Hashtags: #machinelearning #artificialintelligence #tools #developers #businesse
 
       </google-codelab-step>
     
-      <google-codelab-step label="Sequential Workflow: Research and Draft" duration="0">
+      <google-codelab-step label="Sequential Workflow: Research and Draft" duration="10">
         <aside class="special"><p><strong>What you will build:</strong> A <code>SequentialAgent</code> that chains <code>topic_research_agent</code> and <code>content_drafter_agent</code> in order. Each step completes before the next starts, and output flows through session state.</p>
 </aside>
 <h2 is-upgraded>SequentialAgent</h2>
@@ -515,7 +499,7 @@ content_drafter_agent
 <aside class="special"><p><strong>Why is the workflow assembly in </strong><strong><code>orchestrator_agent/agent.py</code></strong><strong>?</strong> Each specialist agent (<code>topic_research_agent</code>, <code>content_drafter_agent</code>, etc.) lives in its own package and does one thing well. It has no knowledge of the pipeline it belongs to. The <code>orchestrator_agent</code> is the single place that composes those specialists into workflows and owns the execution graph. This separation means you can test any specialist in isolation with <code>adk web</code>, swap one out, or reuse it in a different pipeline, without touching the others.</p>
 </aside>
 <h2 is-upgraded>Test the sequential workflow</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --port 8080 \
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
     --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>orchestrator_agent</code> from the dropdown, then enter the prompt:</p>
@@ -532,7 +516,7 @@ current_content → &#34;# 10 Sustainable Packaging Innovations...\n\n...&#34;
 
       </google-codelab-step>
     
-      <google-codelab-step label="The Quality Loop: Checker, Improver, and LoopAgent" duration="0">
+      <google-codelab-step label="The Quality Loop: Checker, Improver, and LoopAgent" duration="10">
         <aside class="special"><p><strong>What you will build:</strong> A <code>LoopAgent</code> that iterates between a quality checker and a content improver until the content passes a score threshold or reaches the maximum number of iterations. You will see how <code>exit_loop</code> lets an agent signal the loop to stop early.</p>
 </aside>
 <p>A draft is a starting point, not a finished product. In this step you&#39;ll add an automatic quality review cycle.</p>
@@ -560,9 +544,8 @@ current_content → &#34;# 10 Sustainable Packaging Innovations...\n\n...&#34;
 <aside class="special"><p><strong>Note on double braces:</strong> Both instructions are f-strings, so <code>&#123;&#123;current_content}}</code> in Python source becomes <code>{current_content}</code> at runtime — the form ADK needs for session state substitution.</p>
 </aside>
 <h2 is-upgraded>Fill in the LoopAgent</h2>
-<pre><code language="language-python" class="language-python"># agents/orchestrator_agent/agent.py
-
-quality_improvement_loop = LoopAgent(
+<p>Find the <code># TODO: #REPLACE-quality-improvement-loop</code> comment in <code>agents/orchestrator_agent/agent.py</code> and replace it with:</p>
+<pre><code language="language-python" class="language-python">quality_improvement_loop = LoopAgent(
     name=&#34;quality_improvement_loop&#34;,
     sub_agents=[quality_checker_agent, content_improver_agent],
     max_iterations=MAX_IMPROVEMENT_ITERATIONS,
@@ -575,17 +558,8 @@ quality_improvement_loop = LoopAgent(
     sub_agents=[research_and_draft_workflow, quality_improvement_loop],
 )
 </code></pre>
-<p>Run <code>uv run adk web agents --port 8080</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
+<p>Run <code>uv run adk web agents --allow_origins='*' \\ --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
 <pre><code language="language-text" class="language-text">Write a blog about sustainable packaging for eco-conscious millennials
-</code></pre>
-<p>In the Events panel you&#39;ll see multiple passes: research → draft → quality check → improve → quality check → (exit or max reached). In the terminal, you&#39;ll see output like:</p>
-<pre><code language="language-text" class="language-text">▶ AGENT START: quality_checker_agent
-■ AGENT DONE: quality_checker_agent (3.2s)
-▶ AGENT START: content_improver_agent
-■ AGENT DONE: content_improver_agent (5.1s)
-▶ AGENT START: quality_checker_agent
-  📊 Model output for quality_checker_agent: ~45 words
-■ AGENT DONE: quality_checker_agent (2.8s)
 </code></pre>
 <aside class="special"><p><strong>Keep this as </strong><strong><code>root_agent</code></strong><strong> for now.</strong> You&#39;ll replace it with the three-phase pipeline in the next step.</p>
 </aside>
@@ -594,7 +568,7 @@ quality_improvement_loop = LoopAgent(
 
       </google-codelab-step>
     
-      <google-codelab-step label="Parallel Content Creation" duration="0">
+      <google-codelab-step label="Parallel Content Creation" duration="8">
         <aside class="special"><p><strong>What you will build:</strong> A <code>ParallelAgent</code> that fans out to four specialist agents at the same time. All four run concurrently instead of sequentially, reducing total latency from ~40 seconds to ~10 seconds.</p>
 </aside>
 <p>The draft has been researched, written, and quality-checked. Now generate four content formats simultaneously.</p>
@@ -650,9 +624,8 @@ quality_improvement_loop = LoopAgent(
 </td></tr>
 </table>
 <h2 is-upgraded>Fill in the ParallelAgent</h2>
-<pre><code language="language-python" class="language-python"># agents/orchestrator_agent/agent.py
-
-parallel_content_creation = ParallelAgent(
+<p>Find the <code># TODO: #REPLACE-parallel-content-creation</code> comment in <code>agents/orchestrator_agent/agent.py</code> and replace it with:</p>
+<pre><code language="language-python" class="language-python">parallel_content_creation = ParallelAgent(
     name=&#34;parallel_content_creation&#34;,
     sub_agents=[
         blog_post_writer_agent,
@@ -666,12 +639,12 @@ parallel_content_creation = ParallelAgent(
 
       </google-codelab-step>
     
-      <google-codelab-step label="Assemble the Full Pipeline" duration="0">
+      <google-codelab-step label="Assemble the Full Pipeline" duration="10">
         <aside class="special"><p><strong>What you will build:</strong> A single <code>SequentialAgent</code> that composes all three patterns together: Sequential research and draft, then Loop quality improvement, then Parallel multi-channel generation. This is the complete three-phase content pipeline.</p>
 </aside>
 <p>Now compose all three phases into the complete content workflow.</p>
 <h2 is-upgraded>Fill in the full workflow</h2>
-<p>Replace the temporary <code>root_agent</code> at the bottom of <code>agents/orchestrator_agent/agent.py</code> with the complete pipeline:</p>
+<p>Find the <code># TODO: #REPLACE-full-content-workflow</code> comment in <code>agents/orchestrator_agent/agent.py</code> and replace it with the complete pipeline:</p>
 <pre><code language="language-python" class="language-python"># agents/orchestrator_agent/agent.py
 
 full_content_workflow = SequentialAgent(
@@ -687,7 +660,7 @@ root_agent = full_content_workflow
 </code></pre>
 <p>This is a <code>SequentialAgent</code> wrapping other <code>SequentialAgent</code>, <code>LoopAgent</code>, and <code>ParallelAgent</code> instances. ADK treats all agent types uniformly as <code>sub_agents</code>, so nesting works at any depth.</p>
 <h2 is-upgraded>Test the complete pipeline</h2>
-<p>Run <code>uv run adk web agents --port 8080</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
+<p>Run <code>uv run adk web agents --allow_origins='*' \\ --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
 <pre><code language="language-text" class="language-text">Write a blog about sustainable packaging for eco-conscious millennials
 </code></pre>
 <p>All four keys should appear in the State tab simultaneously after the research → draft → quality loop completes:</p>
@@ -714,7 +687,7 @@ seo_metadata       → &#34;**Meta Title:** ...&#34;
 
       </google-codelab-step>
     
-      <google-codelab-step label="The Orchestrator" duration="0">
+      <google-codelab-step label="The Orchestrator" duration="15">
         <aside class="special"><p><strong>What you will build:</strong> An LLM-driven <code>Agent</code> that sits at the boundary and reads user intent. It routes content creation requests to <code>full_content_workflow</code> and text analysis requests to <code>content_analyzer_agent</code>, without the user needing to choose explicitly.</p>
 </aside>
 <p>You now have a complete three-phase content pipeline. But users don&#39;t always want to create content - sometimes they want to analyze existing text. Rather than exposing two separate entry points, you&#39;ll wrap everything behind a single orchestrator that reads the user&#39;s intent and routes accordingly.</p>
@@ -723,9 +696,8 @@ seo_metadata       → &#34;**Meta Title:** ...&#34;
 <h2 is-upgraded>Content Analyzer Agent</h2>
 <p><code>content_analyzer_agent</code> is already complete — you built and tested it in <strong>section 5</strong>. It has all three tools wired in (<code>count_words</code>, <code>calculate_readability_score</code>, <code>generate_hashtags</code>) and its own <code>root_agent</code>. Here you simply add it as a sub-agent of the orchestrator.</p>
 <h2 is-upgraded>Fill in the orchestrator</h2>
-<pre><code language="language-python" class="language-python"># agents/orchestrator_agent/agent.py
-
-orchestrator_agent = Agent(
+<p>Find the <code># TODO: #REPLACE-orchestrator</code> comment in <code>agents/orchestrator_agent/agent.py</code> and replace it with:</p>
+<pre><code language="language-python" class="language-python">orchestrator_agent = Agent(
     name=&#34;orchestrator_agent&#34;,
     model=MODEL_NAME,
     instruction=&#34;&#34;&#34;
@@ -757,7 +729,7 @@ root_agent = orchestrator_agent
 <aside class="special"><p><strong>sub_agents vs AgentTool:</strong> Using <code>sub_agents=</code> means inner agent events propagate to the <code>Runner</code> and are visible externally (needed for the FastAPI SSE backend to detect which channel agent produced which output). Using <code>AgentTool</code> wraps the agent as an opaque tool call - inner events are hidden. See the <strong>Agent Teams: sub_agents vs AgentTool</strong> section for the full trade-off discussion.</p>
 </aside>
 <h2 is-upgraded>Test routing</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --port 8080 \
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
     --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>orchestrator_agent</code> from the dropdown.</p>
@@ -778,328 +750,7 @@ Hashtags: #ArtificialIntelligence #BusinessTransformation #AI #Technology #Innov
 
       </google-codelab-step>
     
-      <google-codelab-step label="Callbacks: Observability &amp; Safety (Optional)" duration="0">
-        <p>Callbacks let you intercept agent execution at six points without modifying agent logic. Open the <code>orchestrator_agent</code> callbacks file:</p>
-<pre><code language="language-bash" class="language-bash">cloudshell edit agents/orchestrator_agent/callbacks.py
-</code></pre>
-<p>The imports, type annotations, <code>_extract_session_id</code> helper, and <code>BLOCKED_TOPICS</code> list are already provided - fill in the four function bodies.</p>
-<h2 is-upgraded>The six callback hooks</h2>
-<table>
-<tr><td colspan="1" rowspan="1"><p>Hook</p>
-</td><td colspan="1" rowspan="1"><p>When it fires</p>
-</td><td colspan="1" rowspan="1"><p>Override by returning</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>before_agent_callback</code></p>
-</td><td colspan="1" rowspan="1"><p>Before an agent runs</p>
-</td><td colspan="1" rowspan="1"><p><code>types.Content</code> to skip the agent</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>after_agent_callback</code></p>
-</td><td colspan="1" rowspan="1"><p>After an agent runs</p>
-</td><td colspan="1" rowspan="1"><p><code>types.Content</code> to replace the response</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>before_model_callback</code></p>
-</td><td colspan="1" rowspan="1"><p>Before each LLM call</p>
-</td><td colspan="1" rowspan="1"><p><code>LlmResponse</code> to skip the model call</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>after_model_callback</code></p>
-</td><td colspan="1" rowspan="1"><p>After each LLM call</p>
-</td><td colspan="1" rowspan="1"><p><code>LlmResponse</code> to replace the response</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>before_tool_callback</code></p>
-</td><td colspan="1" rowspan="1"><p>Before each tool call</p>
-</td><td colspan="1" rowspan="1"><p><code>dict</code> to skip the tool</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><code>after_tool_callback</code></p>
-</td><td colspan="1" rowspan="1"><p>After each tool call</p>
-</td><td colspan="1" rowspan="1"><p><code>dict</code> to replace the tool result</p>
-</td></tr>
-</table>
-<p><strong>The key rule:</strong> return <code>None</code> to proceed normally. Return a typed object to override.</p>
-<h2 is-upgraded>Fill in the agent callbacks</h2>
-<pre><code language="language-python" class="language-python">def before_agent_callback(callback_context: CallbackContext) -&gt; Optional[types.Content]:
-    agent_name = callback_context.agent_name
-    session = callback_context._invocation_context.session
-    session_id = _extract_session_id(session)
-    print(f&#34;\n{&#39;─&#39;*50}&#34;)
-    print(f&#34;▶ AGENT START: {agent_name}&#34;)
-    print(f&#34;{&#39;─&#39;*50}&#34;)
-    execution_key = f&#34;{agent_name}:{session_id}&#34;
-    _agent_execution_tracker[execution_key] = time.time()
-    return None  # Proceed normally
-
-
-async def after_agent_callback(callback_context: CallbackContext) -&gt; Optional[types.Content]:
-    try:
-        memory_service = callback_context._invocation_context.memory_service
-        session = callback_context._invocation_context.session
-        agent_name = getattr(callback_context, &#39;agent_name&#39;, &#39;unknown&#39;)
-        session_id = _extract_session_id(session)
-        execution_key = f&#34;{agent_name}:{session_id}&#34;
-        if execution_key in _agent_execution_tracker:
-            total_execution_time = time.time() - _agent_execution_tracker.pop(execution_key)
-            print(f&#34;\n{&#39;─&#39;*50}&#34;)
-            print(f&#34;■ AGENT DONE: {agent_name} ({total_execution_time:.1f}s)&#34;)
-            print(f&#34;{&#39;─&#39;*50}&#34;)
-            if total_execution_time &gt; 20:
-                logger.warning(&#34;Slow agent: %s took %.2fs&#34;, agent_name, total_execution_time)
-        if memory_service and hasattr(memory_service, &#39;add_session_to_memory&#39;):
-            events = getattr(session, &#39;events&#39;, [])
-            await memory_service.add_session_to_memory(session)
-            print(f&#34;  💾 Session saved to memory ({len(events)} events)&#34;)
-    except Exception as e:
-        logger.error(&#34;after_agent_callback error: %s&#34;, e)
-    return None
-</code></pre>
-<h2 is-upgraded>Fill in the model callbacks</h2>
-<p>The <code>before_model_callback</code> is a <strong>content safety guardrail</strong>. It scans every prompt before it reaches the model:</p>
-<pre><code language="language-python" class="language-python">BLOCKED_TOPICS = [&#34;violence&#34;, &#34;illegal&#34;, &#34;harmful&#34;, &#34;hate speech&#34;]
-
-def before_model_callback(
-    callback_context: CallbackContext,
-    llm_request: LlmRequest
-) -&gt; Optional[LlmResponse]:
-    agent_name = callback_context.agent_name
-    print(f&#34;  🤖 Calling model for {agent_name}...&#34;)
-    for content in reversed(llm_request.contents or []):
-        if content.role == &#34;user&#34;:
-            for part in (content.parts or []):
-                text = (part.text or &#34;&#34;).lower()
-                for topic in BLOCKED_TOPICS:
-                    if topic in text:
-                        print(f&#34;  🛡️ GUARDRAIL: Blocked request containing &#39;{topic}&#39;&#34;)
-                        return LlmResponse(
-                            content=types.Content(
-                                parts=[types.Part.from_text(
-                                    text=f&#34;I cannot generate content about &#39;{topic}&#39;. Please provide a different topic.&#34;
-                                )],
-                                role=&#34;model&#34;
-                            )
-                        )
-            break  # only check the most recent user message
-    return None  # Proceed with the model call
-
-
-def after_model_callback(
-    callback_context: CallbackContext,
-    llm_response: LlmResponse
-) -&gt; Optional[LlmResponse]:
-    agent_name = callback_context.agent_name
-    if llm_response.content and llm_response.content.parts:
-        text = llm_response.content.parts[0].text or &#34;&#34;
-        word_count = len(text.split())
-        print(f&#34;  ✅ Model responded for {agent_name}: ~{word_count} words&#34;)
-    else:
-        print(f&#34;  ⚠️ Model responded for {agent_name} with empty content&#34;)
-    return None  # Use the model response as-is
-</code></pre>
-<h2 is-upgraded>Fill in the tool callbacks (Recommended for debugging)</h2>
-<p>Add these to help track exactly when tools (like <code>google_search</code>) are running and when they finish.</p>
-<pre><code language="language-python" class="language-python">def before_tool_callback(
-    callback_context: CallbackContext,
-    tool_call: types.ToolCall
-) -&gt; None:
-    agent_name = callback_context.agent_name
-    tool_name = tool_call.function_call.name
-    print(f&#34;  🛠️  TOOL START: {agent_name} calling {tool_name}...&#34;)
-
-
-def after_tool_callback(
-    callback_context: CallbackContext,
-    tool_response: types.ToolResponse
-) -&gt; None:
-    agent_name = callback_context.agent_name
-    tool_name = tool_response.function_response.name
-    print(f&#34;  🏁 TOOL DONE: {agent_name} finished {tool_name}&#34;)
-</code></pre>
-<h2 is-upgraded>Test the guardrail</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --port 8080 \
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
-</code></pre>
-<p>Select <code>orchestrator_agent</code> from the dropdown, then enter:</p>
-<pre><code language="language-text" class="language-text">Create content about violence and illegal activities
-</code></pre>
-<p>You should see this in your terminal and the agent refuses without ever calling the model:</p>
-<pre><code language="language-text" class="language-text">──────────────────────────────────────────────────
-▶ AGENT START: master_orchestrator_agent
-──────────────────────────────────────────────────
-  🛡️ GUARDRAIL: Blocked request containing &#39;violence&#39;
-</code></pre>
-<p>Press <code>Ctrl+C</code> to stop the server.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Artifacts: Persistent File Storage (Optional)" duration="0">
-        <p>You&#39;ve worked with one data persistence layer so far: <strong>session state</strong> (lives for one conversation, passed between agents via <code>output_key</code> and <code>{key}</code>). Artifacts are the second layer: named, versioned file storage that outlasts a session. A third layer - <strong>long-term memory</strong> - is covered in the next section.</p>
-<h2 is-upgraded>The three-layer persistence model</h2>
-<table>
-<tr><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"><p><strong>State</strong></p>
-</td><td colspan="1" rowspan="1"><p><strong>Artifacts</strong></p>
-</td><td colspan="1" rowspan="1"><p><strong>Memory</strong></p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Scope</strong></p>
-</td><td colspan="1" rowspan="1"><p>One conversation</p>
-</td><td colspan="1" rowspan="1"><p>One session (or cross-session with <code>user:</code> prefix)</p>
-</td><td colspan="1" rowspan="1"><p>All conversations</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Content</strong></p>
-</td><td colspan="1" rowspan="1"><p>Key-value pairs</p>
-</td><td colspan="1" rowspan="1"><p>Files (text, binary)</p>
-</td><td colspan="1" rowspan="1"><p>Conversation summaries</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Write</strong></p>
-</td><td colspan="1" rowspan="1"><p><code>output_key</code></p>
-</td><td colspan="1" rowspan="1"><p><code>tool_context.save_artifact()</code></p>
-</td><td colspan="1" rowspan="1"><p><code>memory_service.add_session_to_memory()</code></p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Read</strong></p>
-</td><td colspan="1" rowspan="1"><p><code>{key}</code> templating</p>
-</td><td colspan="1" rowspan="1"><p><code>tool_context.load_artifact()</code></p>
-</td><td colspan="1" rowspan="1"><p><code>PreloadMemoryTool</code></p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Use case</strong></p>
-</td><td colspan="1" rowspan="1"><p>Agent-to-agent data passing</p>
-</td><td colspan="1" rowspan="1"><p>Saving generated files</p>
-</td><td colspan="1" rowspan="1"><p>Cross-session continuity</p>
-</td></tr>
-</table>
-<p>Choose based on lifetime: state for within-session coordination, artifacts for persisting files, memory for cross-session continuity.</p>
-<h2 is-upgraded>When to use artifacts</h2>
-<p>Use artifacts when you need to:</p>
-<ul>
-<li><strong>Save generated content</strong> for later retrieval within the same session (e.g., save the final blog post as a <code>.md</code> file)</li>
-<li><strong>Share files</strong> across turns without putting large content in the state dict</li>
-<li><strong>Version content</strong> - every <code>save_artifact()</code> call increments a version number, so you keep a history</li>
-<li><strong>Persist files across sessions</strong> by prefixing the filename with <code>user:</code> (e.g., <code>user:blog_post.md</code>)</li>
-</ul>
-<h2 is-upgraded>Explore the artifact tools</h2>
-<pre><code language="language-bash" class="language-bash">cloudshell edit agents/artifacts.py
-</code></pre>
-<p>It defines three tools:</p>
-<pre><code language="language-python" class="language-python">async def save_content_artifact(tool_context, filename, content) -&gt; dict:
-    &#34;&#34;&#34;Saves generated content as a versioned artifact.&#34;&#34;&#34;
-    artifact = types.Part.from_text(text=content)
-    version = await tool_context.save_artifact(filename=filename, artifact=artifact)
-    return {&#34;filename&#34;: filename, &#34;version&#34;: version}
-
-async def list_content_artifacts(tool_context) -&gt; list:
-    &#34;&#34;&#34;Lists all artifact filenames saved in the current session.&#34;&#34;&#34;
-    return await tool_context.list_artifacts()
-
-async def load_content_artifact(tool_context, filename) -&gt; str:
-    &#34;&#34;&#34;Loads a previously saved artifact by filename.&#34;&#34;&#34;
-    artifact = await tool_context.load_artifact(filename=filename)
-    if artifact and artifact.text:
-        return artifact.text
-    return f&#34;Artifact &#39;{filename}&#39; not found.&#34;
-</code></pre>
-<p>Each function uses <code>tool_context</code> (injected by ADK) to call <code>save_artifact</code>, <code>list_artifacts</code>, and <code>load_artifact</code>. The <code>ToolContext</code> provides access to both the artifact service and the current session.</p>
-<h2 is-upgraded>How you&#39;d wire artifacts into an agent</h2>
-<p>To give an agent the ability to save content as a file, add these tools to its <code>tools</code> list:</p>
-<pre><code language="language-python" class="language-python">from google.adk.tools import FunctionTool
-from agents.artifacts import (
-    save_content_artifact,
-    list_content_artifacts,
-    load_content_artifact,
-)
-
-blog_post_writer_agent = Agent(
-    name=&#34;blog_post_writer_agent&#34;,
-    ...
-    tools=[
-        FunctionTool(save_content_artifact),
-        FunctionTool(list_content_artifacts),
-    ],
-    output_key=&#34;final_blog_post&#34;,
-)
-</code></pre>
-<p>The agent can then be instructed to save its output:</p>
-<pre><code language="language-text" class="language-text">After writing the blog post, save it as an artifact with filename &#39;blog_post.md&#39;.
-</code></pre>
-<h2 is-upgraded>Try it out</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --port 8080 \
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
-</code></pre>
-<p>Select <code>orchestrator_agent</code> from the dropdown, then enter:</p>
-<pre><code language="language-text" class="language-text">Create content about remote work productivity and save the blog post as an artifact called blog_post.md
-</code></pre>
-<p>After the agent responds, click the <strong>Artifacts</strong> tab in the ADK Dev UI — you should see <code>blog_post.md</code> listed with version <code>0</code>.</p>
-<p>Press <code>Ctrl+C</code> to stop the server.</p>
-<h2 is-upgraded>Cross-session artifacts</h2>
-<p>By default, artifacts are scoped to the current session. Prefix the filename with <code>user:</code> to make an artifact available across all sessions for the same user:</p>
-<pre><code language="language-python" class="language-python"># Session-scoped (default)
-await tool_context.save_artifact(filename=&#34;blog_post.md&#34;, artifact=artifact)
-
-# Cross-session (persists across conversations)
-await tool_context.save_artifact(filename=&#34;user:blog_post.md&#34;, artifact=artifact)
-</code></pre>
-<aside class="special"><p><strong>Production note: </strong><code>InMemoryArtifactService</code> is for local development and resets when the process restarts. For production on Agent Runtime, use <code>GcsArtifactService</code> backed by a Cloud Storage bucket - artifacts then persist indefinitely.</p>
-</aside>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Long-Term Memory (Optional)" duration="0">
-        <p>Your agents currently remember nothing between sessions. Let&#39;s fix that.</p>
-<p>You&#39;ve already seen the full three-layer persistence model in the <strong>Artifacts</strong> section. Memory is the third layer - it extends beyond the current session:</p>
-<table>
-<tr><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"><p><strong>State</strong></p>
-</td><td colspan="1" rowspan="1"><p><strong>Artifacts</strong></p>
-</td><td colspan="1" rowspan="1"><p><strong>Memory</strong></p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Scope</strong></p>
-</td><td colspan="1" rowspan="1"><p>One conversation</p>
-</td><td colspan="1" rowspan="1"><p>One session (or cross-session with <code>user:</code> prefix)</p>
-</td><td colspan="1" rowspan="1"><p>All conversations</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Content</strong></p>
-</td><td colspan="1" rowspan="1"><p>Key-value pairs</p>
-</td><td colspan="1" rowspan="1"><p>Files (text, binary)</p>
-</td><td colspan="1" rowspan="1"><p>Conversation summaries</p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Write</strong></p>
-</td><td colspan="1" rowspan="1"><p><code>output_key</code></p>
-</td><td colspan="1" rowspan="1"><p><code>tool_context.save_artifact()</code></p>
-</td><td colspan="1" rowspan="1"><p><code>memory_service.add_session_to_memory()</code></p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Read</strong></p>
-</td><td colspan="1" rowspan="1"><p><code>{key}</code> templating</p>
-</td><td colspan="1" rowspan="1"><p><code>tool_context.load_artifact()</code></p>
-</td><td colspan="1" rowspan="1"><p><code>PreloadMemoryTool</code></p>
-</td></tr>
-<tr><td colspan="1" rowspan="1"><p><strong>Use case</strong></p>
-</td><td colspan="1" rowspan="1"><p>Agent-to-agent data passing</p>
-</td><td colspan="1" rowspan="1"><p>Saving generated files</p>
-</td><td colspan="1" rowspan="1"><p>Cross-session continuity</p>
-</td></tr>
-</table>
-<p>The <strong>write side</strong> is already handled: the <code>after_agent_callback</code> you implemented in the <strong>Callbacks</strong> section calls <code>await memory_service.add_session_to_memory(session)</code> after every agent turn.</p>
-<p>The <strong>read side</strong> is <code>PreloadMemoryTool</code> - ADK automatically invokes it before each turn to inject relevant past sessions into the model&#39;s context. You already wired it into <code>master_orchestrator_agent</code> in the <strong>Master Orchestrator</strong> section, so no code changes are needed here.</p>
-<h2 is-upgraded>Test cross-session memory</h2>
-<aside class="warning"><p><strong><code>adk web</code></strong><strong> uses </strong><strong><code>InMemorySessionService</code></strong> — sessions are isolated in-process and do not persist when you open a new session or restart the server. Cross-session memory only works when the agent is deployed to <strong>Agent Runtime with Agent Platform Memory Bank</strong> enabled.</p>
-</aside>
-<p>To verify memory works, use the deployed agent:</p>
-<pre><code language="language-bash" class="language-bash">uv run python deployment/deploy.py --action test_remote
-</code></pre>
-<p>Run it twice with different topics:</p>
-<p><strong>First run</strong> — session 1:</p>
-<pre><code language="language-text" class="language-text">Create content about Python async programming for backend developers
-</code></pre>
-<p><strong>Second run</strong> — session 2 (new invocation of <code>test_remote</code>):</p>
-<pre><code language="language-text" class="language-text">What blog topics have I asked you to write about before?
-</code></pre>
-<p>The orchestrator should recall the Python async topic from the first run:</p>
-<pre><code language="language-text" class="language-text">Based on our previous conversation, you asked me to write about
-&#34;Python async programming for backend developers&#34;. Would you like
-to create more content on that topic or explore something new?
-</code></pre>
-<aside class="special"><p><strong>How it works on Agent Runtime:</strong> Agent Platform Memory Bank is a managed vector store. After each turn, <code>after_agent_callback</code> calls <code>memory_service.add_session_to_memory()</code> to write the session. Before each turn, <code>PreloadMemoryTool</code> queries Memory Bank and injects relevant past sessions into the model context automatically.</p>
-</aside>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Deploy to Agent Runtime" duration="0">
+      <google-codelab-step label="Deploy to Agent Runtime" duration="15">
         <h2 is-upgraded>What is Agent Runtime?</h2>
 <p><strong>Agent Runtime</strong> (formerly Vertex AI Agent Engine) is the fully-managed runtime for ADK agents inside the <strong>Gemini Enterprise Agent Platform</strong>. Deploying an agent on Agent Runtime makes it available <strong>remotely</strong> to handle requests — any client (your Cloud Run backend, the in-console playground, scripts, other agents) can call it without ever holding the agent code itself.</p>
 <p><strong>Why deploy here instead of running it yourself?</strong></p>
@@ -1170,20 +821,17 @@ to create more content on that topic or explore something new?
 <h2 is-upgraded>Create a GCS bucket</h2>
 <pre><code language="language-bash" class="language-bash">gcloud storage buckets create gs://$GOOGLE_CLOUD_PROJECT-content-studio --location=us-central1
 </code></pre>
-<p>Add the bucket to your <code>.env</code>:</p>
-<pre><code language="language-bash" class="language-bash">printf &#34;\nGOOGLE_CLOUD_STORAGE_BUCKET=gs://%s-content-studio\n&#34; &#34;$GOOGLE_CLOUD_PROJECT&#34; &gt;&gt; .env 
+<p>Update the bucket in your <code>.env</code>:</p>
+<pre><code language="language-bash" class="language-bash">sed -i &#34;s|GOOGLE_CLOUD_STORAGE_BUCKET=gs://your-project-id-content-studio|GOOGLE_CLOUD_STORAGE_BUCKET=gs://${GOOGLE_CLOUD_PROJECT}-content-studio|&#34; .env
 </code></pre>
 <h2 is-upgraded>Deploy</h2>
 <pre><code language="language-bash" class="language-bash">uv run python deployment/deploy.py --action deploy
 </code></pre>
-<p>This packages your <code>agents/</code> module, uploads it to GCS, and deploys it to Agent Runtime. The process takes 5-10 minutes. When complete, it prints a resource name like:</p>
-<pre><code language="language-text" class="language-text">projects/123456/locations/us-central1/reasoningEngines/789012345
+<p>This packages your <code>agents/</code> module, uploads it to GCS, and deploys it to Agent Runtime. The process takes 5-10 minutes. When complete, it automatically writes <code>AGENT_ENGINE_RESOURCE_NAME</code> to your <code>.env</code>. Verify it was set:</p>
+<pre><code language="language-bash" class="language-bash">grep AGENT_ENGINE_RESOURCE_NAME .env
 </code></pre>
-<p>Open your <code>.env</code> and add the resource name:</p>
-<pre><code language="language-bash" class="language-bash">cloudshell edit .env
-</code></pre>
-<p>Add this line (replace with your actual resource name from the output above):</p>
-<pre><code language="language-text" class="language-text">AGENT_ENGINE_RESOURCE_NAME=projects/YOUR_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_ENGINE_ID
+<p>Expected output:</p>
+<pre><code language="language-text" class="language-text">AGENT_ENGINE_RESOURCE_NAME=projects/123456/locations/us-central1/reasoningEngines/789012345
 </code></pre>
 <h2 is-upgraded>Test the remote agent</h2>
 <pre><code language="language-bash" class="language-bash">uv run python deployment/deploy.py --action test_remote
@@ -1226,7 +874,7 @@ Test complete.
 
       </google-codelab-step>
     
-      <google-codelab-step label="Full-Stack Cloud Run Deployment" duration="0">
+      <google-codelab-step label="Full-Stack Cloud Run Deployment" duration="15">
         <aside class="special"><p><strong>Prerequisites:</strong> Agent Runtime deployment complete (previous section) and <code>AGENT_ENGINE_RESOURCE_NAME</code> set in your <code>.env</code>. The variable name is kept for compatibility with existing deployments.</p>
 </aside>
 <p>So far you&#39;ve run the agent locally via <code>adk web</code>. In this step you&#39;ll deploy a production web application: a React frontend served by a FastAPI backend, both packaged in a single Docker container on Cloud Run.</p>
@@ -1351,7 +999,7 @@ async def serve_frontend():
 
       </google-codelab-step>
     
-      <google-codelab-step label="Clean Up Resources" duration="0">
+      <google-codelab-step label="Clean Up Resources" duration="3">
         <p>To avoid ongoing charges, run the cleanup script to tear down all resources created during this codelab.</p>
 <h2 is-upgraded>What gets cleaned up</h2>
 <p>The script removes everything created by <code>setup_gcp.sh</code> and <code>deploy-combined.sh</code>:</p>
@@ -1402,7 +1050,7 @@ Are you sure you want to proceed? (yes/no):
 
       </google-codelab-step>
     
-      <google-codelab-step label="Agent Teams: sub_agents vs AgentTool" duration="0">
+      <google-codelab-step label="Agent Teams: sub_agents vs AgentTool" duration="5">
         <p>You&#39;ve seen how a single agent uses tools to get things done. But in a multi-agent system, agents also need to delegate work to <em>other agents</em>. ADK gives you two patterns for this - and choosing the wrong one has real consequences for how data flows, how events are visible, and how much control the parent agent has.</p>
 <h2 is-upgraded>Pattern 1: AgentTool (agent as a callable tool)</h2>
 <p><code>AgentTool</code> wraps an entire agent as a tool that a parent agent can call. The parent LLM decides <em>when</em> to call it and what to pass as input, just like any other tool.</p>
@@ -1476,7 +1124,7 @@ coordinator/orchestrator
 
       </google-codelab-step>
     
-      <google-codelab-step label="Choosing the Right Architecture" duration="0">
+      <google-codelab-step label="Choosing the Right Architecture" duration="5">
         <p>Before writing any agent code, the most important question is: <strong>what pattern fits your problem?</strong> Using the wrong architecture leads to brittle systems, unnecessary cost, and agents that fight each other instead of collaborating.</p>
 <h2 is-upgraded>Pattern categories</h2>
 <p>Google Cloud groups agentic patterns into four categories based on your workload&#39;s characteristics:</p>
@@ -1557,7 +1205,7 @@ coordinator/orchestrator
 </td><td colspan="1" rowspan="1"><p>User intent is open-ended - model decides which pipeline to invoke</p>
 </td></tr>
 </table>
-<p>Keep this table in mind as you build each piece in the following steps.</p>
+<p>Use this table as a reference to understand the architectural decisions behind each piece you built in this codelab.</p>
 <h2 is-upgraded>LLM-Driven vs Workflow-Driven agents</h2>
 <p>ADK has two fundamentally different agent types, and mixing them up is one of the most common architectural mistakes.</p>
 <table>
@@ -1593,10 +1241,333 @@ coordinator/orchestrator
 
       </google-codelab-step>
     
-      <google-codelab-step label="Congratulations!" duration="0">
+      <google-codelab-step label="Callbacks: Observability &amp; Safety (Optional)" duration="15">
+        <p>Callbacks let you intercept agent execution at six points without modifying agent logic. Open the <code>orchestrator_agent</code> callbacks file:</p>
+<pre><code language="language-bash" class="language-bash">cloudshell edit agents/orchestrator_agent/callbacks.py
+</code></pre>
+<p>The imports, type annotations, <code>_extract_session_id</code> helper, and <code>BLOCKED_TOPICS</code> list are already provided - fill in the four function bodies.</p>
+<h2 is-upgraded>The six callback hooks</h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Hook</p>
+</td><td colspan="1" rowspan="1"><p>When it fires</p>
+</td><td colspan="1" rowspan="1"><p>Override by returning</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>before_agent_callback</code></p>
+</td><td colspan="1" rowspan="1"><p>Before an agent runs</p>
+</td><td colspan="1" rowspan="1"><p><code>types.Content</code> to skip the agent</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>after_agent_callback</code></p>
+</td><td colspan="1" rowspan="1"><p>After an agent runs</p>
+</td><td colspan="1" rowspan="1"><p><code>types.Content</code> to replace the response</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>before_model_callback</code></p>
+</td><td colspan="1" rowspan="1"><p>Before each LLM call</p>
+</td><td colspan="1" rowspan="1"><p><code>LlmResponse</code> to skip the model call</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>after_model_callback</code></p>
+</td><td colspan="1" rowspan="1"><p>After each LLM call</p>
+</td><td colspan="1" rowspan="1"><p><code>LlmResponse</code> to replace the response</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>before_tool_callback</code></p>
+</td><td colspan="1" rowspan="1"><p>Before each tool call</p>
+</td><td colspan="1" rowspan="1"><p><code>dict</code> to skip the tool</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>after_tool_callback</code></p>
+</td><td colspan="1" rowspan="1"><p>After each tool call</p>
+</td><td colspan="1" rowspan="1"><p><code>dict</code> to replace the tool result</p>
+</td></tr>
+</table>
+<p><strong>The key rule:</strong> return <code>None</code> to proceed normally. Return a typed object to override.</p>
+<h2 is-upgraded>Fill in the agent callbacks</h2>
+<p>Find the <code># TODO: #REPLACE-before-agent-callback</code> and <code># TODO: #REPLACE-after-agent-callback</code> comments in <code>agents/orchestrator_agent/callbacks.py</code> and replace them with:</p>
+<pre><code language="language-python" class="language-python">def before_agent_callback(callback_context: CallbackContext) -&gt; Optional[types.Content]:
+    agent_name = callback_context.agent_name
+    session = callback_context._invocation_context.session
+    session_id = _extract_session_id(session)
+    print(f&#34;\n{&#39;─&#39;*50}&#34;)
+    print(f&#34;▶ AGENT START: {agent_name}&#34;)
+    print(f&#34;{&#39;─&#39;*50}&#34;)
+    execution_key = f&#34;{agent_name}:{session_id}&#34;
+    _agent_execution_tracker[execution_key] = time.time()
+    return None  # Proceed normally
+
+
+async def after_agent_callback(callback_context: CallbackContext) -&gt; Optional[types.Content]:
+    try:
+        memory_service = callback_context._invocation_context.memory_service
+        session = callback_context._invocation_context.session
+        agent_name = getattr(callback_context, &#39;agent_name&#39;, &#39;unknown&#39;)
+        session_id = _extract_session_id(session)
+        execution_key = f&#34;{agent_name}:{session_id}&#34;
+        if execution_key in _agent_execution_tracker:
+            total_execution_time = time.time() - _agent_execution_tracker.pop(execution_key)
+            print(f&#34;\n{&#39;─&#39;*50}&#34;)
+            print(f&#34;■ AGENT DONE: {agent_name} ({total_execution_time:.1f}s)&#34;)
+            print(f&#34;{&#39;─&#39;*50}&#34;)
+            if total_execution_time &gt; 20:
+                logger.warning(&#34;Slow agent: %s took %.2fs&#34;, agent_name, total_execution_time)
+        if memory_service and hasattr(memory_service, &#39;add_session_to_memory&#39;):
+            events = getattr(session, &#39;events&#39;, [])
+            await memory_service.add_session_to_memory(session)
+            print(f&#34;  💾 Session saved to memory ({len(events)} events)&#34;)
+    except Exception as e:
+        logger.error(&#34;after_agent_callback error: %s&#34;, e)
+    return None
+</code></pre>
+<h2 is-upgraded>Fill in the model callbacks</h2>
+<p>Find the <code># TODO: #REPLACE-before-model-callback</code> and <code># TODO: #REPLACE-after-model-callback</code> comments in <code>agents/orchestrator_agent/callbacks.py</code> and replace them.</p>
+<p>The <code>before_model_callback</code> is a <strong>content safety guardrail</strong>. It scans every prompt before it reaches the model:</p>
+<pre><code language="language-python" class="language-python">BLOCKED_TOPICS = [&#34;violence&#34;, &#34;illegal&#34;, &#34;harmful&#34;, &#34;hate speech&#34;]
+
+def before_model_callback(
+    callback_context: CallbackContext,
+    llm_request: LlmRequest
+) -&gt; Optional[LlmResponse]:
+    agent_name = callback_context.agent_name
+    print(f&#34;  🤖 Calling model for {agent_name}...&#34;)
+    for content in reversed(llm_request.contents or []):
+        if content.role == &#34;user&#34;:
+            for part in (content.parts or []):
+                text = (part.text or &#34;&#34;).lower()
+                for topic in BLOCKED_TOPICS:
+                    if topic in text:
+                        print(f&#34;  🛡️ GUARDRAIL: Blocked request containing &#39;{topic}&#39;&#34;)
+                        return LlmResponse(
+                            content=types.Content(
+                                parts=[types.Part.from_text(
+                                    text=f&#34;I cannot generate content about &#39;{topic}&#39;. Please provide a different topic.&#34;
+                                )],
+                                role=&#34;model&#34;
+                            )
+                        )
+            break  # only check the most recent user message
+    return None  # Proceed with the model call
+
+
+def after_model_callback(
+    callback_context: CallbackContext,
+    llm_response: LlmResponse
+) -&gt; Optional[LlmResponse]:
+    agent_name = callback_context.agent_name
+    if llm_response.content and llm_response.content.parts:
+        text = llm_response.content.parts[0].text or &#34;&#34;
+        word_count = len(text.split())
+        print(f&#34;  ✅ Model responded for {agent_name}: ~{word_count} words&#34;)
+    else:
+        print(f&#34;  ⚠️ Model responded for {agent_name} with empty content&#34;)
+    return None  # Use the model response as-is
+</code></pre>
+<h2 is-upgraded>Fill in the tool callbacks (Recommended for debugging)</h2>
+<p>Add these to help track exactly when tools (like <code>google_search</code>) are running and when they finish.</p>
+<pre><code language="language-python" class="language-python">def before_tool_callback(
+    callback_context: CallbackContext,
+    tool_call: types.ToolCall
+) -&gt; None:
+    agent_name = callback_context.agent_name
+    tool_name = tool_call.function_call.name
+    print(f&#34;  🛠️  TOOL START: {agent_name} calling {tool_name}...&#34;)
+
+
+def after_tool_callback(
+    callback_context: CallbackContext,
+    tool_response: types.ToolResponse
+) -&gt; None:
+    agent_name = callback_context.agent_name
+    tool_name = tool_response.function_response.name
+    print(f&#34;  🏁 TOOL DONE: {agent_name} finished {tool_name}&#34;)
+</code></pre>
+<h2 is-upgraded>Test the guardrail</h2>
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
+    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+</code></pre>
+<p>Select <code>orchestrator_agent</code> from the dropdown, then enter:</p>
+<pre><code language="language-text" class="language-text">Create content about violence and illegal activities
+</code></pre>
+<p>You should see this in your terminal and the agent refuses without ever calling the model:</p>
+<pre><code language="language-text" class="language-text">──────────────────────────────────────────────────
+▶ AGENT START: orchestrator_agent
+──────────────────────────────────────────────────
+  🛡️ GUARDRAIL: Blocked request containing &#39;violence&#39;
+</code></pre>
+<p>Press <code>Ctrl+C</code> to stop the server.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Artifacts: Persistent File Storage (Optional)" duration="10">
+        <p>You&#39;ve worked with one data persistence layer so far: <strong>session state</strong> (lives for one conversation, passed between agents via <code>output_key</code> and <code>{key}</code>). Artifacts are the second layer: named, versioned file storage that outlasts a session. A third layer - <strong>long-term memory</strong> - is covered in the next section.</p>
+<h2 is-upgraded>The three-layer persistence model</h2>
+<table>
+<tr><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"><p><strong>State</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Artifacts</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Memory</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Scope</strong></p>
+</td><td colspan="1" rowspan="1"><p>One conversation</p>
+</td><td colspan="1" rowspan="1"><p>One session (or cross-session with <code>user:</code> prefix)</p>
+</td><td colspan="1" rowspan="1"><p>All conversations</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Content</strong></p>
+</td><td colspan="1" rowspan="1"><p>Key-value pairs</p>
+</td><td colspan="1" rowspan="1"><p>Files (text, binary)</p>
+</td><td colspan="1" rowspan="1"><p>Conversation summaries</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Write</strong></p>
+</td><td colspan="1" rowspan="1"><p><code>output_key</code></p>
+</td><td colspan="1" rowspan="1"><p><code>tool_context.save_artifact()</code></p>
+</td><td colspan="1" rowspan="1"><p><code>memory_service.add_session_to_memory()</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Read</strong></p>
+</td><td colspan="1" rowspan="1"><p><code>{key}</code> templating</p>
+</td><td colspan="1" rowspan="1"><p><code>tool_context.load_artifact()</code></p>
+</td><td colspan="1" rowspan="1"><p><code>PreloadMemoryTool</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Use case</strong></p>
+</td><td colspan="1" rowspan="1"><p>Agent-to-agent data passing</p>
+</td><td colspan="1" rowspan="1"><p>Saving generated files</p>
+</td><td colspan="1" rowspan="1"><p>Cross-session continuity</p>
+</td></tr>
+</table>
+<p>Choose based on lifetime: state for within-session coordination, artifacts for persisting files, memory for cross-session continuity.</p>
+<h2 is-upgraded>When to use artifacts</h2>
+<p>Use artifacts when you need to:</p>
+<ul>
+<li><strong>Save generated content</strong> for later retrieval within the same session (e.g., save the final blog post as a <code>.md</code> file)</li>
+<li><strong>Share files</strong> across turns without putting large content in the state dict</li>
+<li><strong>Version content</strong> - every <code>save_artifact()</code> call increments a version number, so you keep a history</li>
+<li><strong>Persist files across sessions</strong> by prefixing the filename with <code>user:</code> (e.g., <code>user:blog_post.md</code>)</li>
+</ul>
+<h2 is-upgraded>Explore the artifact tools</h2>
+<pre><code language="language-bash" class="language-bash">cloudshell edit agents/artifacts.py
+</code></pre>
+<p>It defines three tools:</p>
+<pre><code language="language-python" class="language-python">async def save_content_artifact(tool_context, filename, content) -&gt; dict:
+    &#34;&#34;&#34;Saves generated content as a versioned artifact.&#34;&#34;&#34;
+    artifact = types.Part.from_text(text=content)
+    version = await tool_context.save_artifact(filename=filename, artifact=artifact)
+    return {&#34;filename&#34;: filename, &#34;version&#34;: version}
+
+async def list_content_artifacts(tool_context) -&gt; list:
+    &#34;&#34;&#34;Lists all artifact filenames saved in the current session.&#34;&#34;&#34;
+    return await tool_context.list_artifacts()
+
+async def load_content_artifact(tool_context, filename) -&gt; str:
+    &#34;&#34;&#34;Loads a previously saved artifact by filename.&#34;&#34;&#34;
+    artifact = await tool_context.load_artifact(filename=filename)
+    if artifact and artifact.text:
+        return artifact.text
+    return f&#34;Artifact &#39;{filename}&#39; not found.&#34;
+</code></pre>
+<p>Each function uses <code>tool_context</code> (injected by ADK) to call <code>save_artifact</code>, <code>list_artifacts</code>, and <code>load_artifact</code>. The <code>ToolContext</code> provides access to both the artifact service and the current session.</p>
+<h2 is-upgraded>How you&#39;d wire artifacts into an agent</h2>
+<p>To give an agent the ability to save content as a file, add these tools to its <code>tools</code> list:</p>
+<pre><code language="language-python" class="language-python">from google.adk.tools import FunctionTool
+from agents.artifacts import (
+    save_content_artifact,
+    list_content_artifacts,
+    load_content_artifact,
+)
+
+blog_post_writer_agent = Agent(
+    name=&#34;blog_post_writer_agent&#34;,
+    ...
+    tools=[
+        FunctionTool(save_content_artifact),
+        FunctionTool(list_content_artifacts),
+    ],
+    output_key=&#34;final_blog_post&#34;,
+)
+</code></pre>
+<p>The agent can then be instructed to save its output:</p>
+<pre><code language="language-text" class="language-text">After writing the blog post, save it as an artifact with filename &#39;blog_post.md&#39;.
+</code></pre>
+<h2 is-upgraded>Try it out</h2>
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
+    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+</code></pre>
+<p>Select <code>orchestrator_agent</code> from the dropdown, then enter:</p>
+<pre><code language="language-text" class="language-text">Create content about remote work productivity and save the blog post as an artifact called blog_post.md
+</code></pre>
+<p>After the agent responds, click the <strong>Artifacts</strong> tab in the ADK Dev UI — you should see <code>blog_post.md</code> listed with version <code>0</code>.</p>
+<p>Press <code>Ctrl+C</code> to stop the server.</p>
+<h2 is-upgraded>Cross-session artifacts</h2>
+<p>By default, artifacts are scoped to the current session. Prefix the filename with <code>user:</code> to make an artifact available across all sessions for the same user:</p>
+<pre><code language="language-python" class="language-python"># Session-scoped (default)
+await tool_context.save_artifact(filename=&#34;blog_post.md&#34;, artifact=artifact)
+
+# Cross-session (persists across conversations)
+await tool_context.save_artifact(filename=&#34;user:blog_post.md&#34;, artifact=artifact)
+</code></pre>
+<aside class="special"><p><strong>Production note: </strong><code>InMemoryArtifactService</code> is for local development and resets when the process restarts. For production on Agent Runtime, use <code>GcsArtifactService</code> backed by a Cloud Storage bucket - artifacts then persist indefinitely.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Long-Term Memory (Optional)" duration="10">
+        <p>Your agents currently remember nothing between sessions. Let&#39;s fix that.</p>
+<p>You&#39;ve already seen the full three-layer persistence model in the <strong>Artifacts</strong> section. Memory is the third layer - it extends beyond the current session:</p>
+<table>
+<tr><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"><p><strong>State</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Artifacts</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Memory</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Scope</strong></p>
+</td><td colspan="1" rowspan="1"><p>One conversation</p>
+</td><td colspan="1" rowspan="1"><p>One session (or cross-session with <code>user:</code> prefix)</p>
+</td><td colspan="1" rowspan="1"><p>All conversations</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Content</strong></p>
+</td><td colspan="1" rowspan="1"><p>Key-value pairs</p>
+</td><td colspan="1" rowspan="1"><p>Files (text, binary)</p>
+</td><td colspan="1" rowspan="1"><p>Conversation summaries</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Write</strong></p>
+</td><td colspan="1" rowspan="1"><p><code>output_key</code></p>
+</td><td colspan="1" rowspan="1"><p><code>tool_context.save_artifact()</code></p>
+</td><td colspan="1" rowspan="1"><p><code>memory_service.add_session_to_memory()</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Read</strong></p>
+</td><td colspan="1" rowspan="1"><p><code>{key}</code> templating</p>
+</td><td colspan="1" rowspan="1"><p><code>tool_context.load_artifact()</code></p>
+</td><td colspan="1" rowspan="1"><p><code>PreloadMemoryTool</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Use case</strong></p>
+</td><td colspan="1" rowspan="1"><p>Agent-to-agent data passing</p>
+</td><td colspan="1" rowspan="1"><p>Saving generated files</p>
+</td><td colspan="1" rowspan="1"><p>Cross-session continuity</p>
+</td></tr>
+</table>
+<p>The <strong>write side</strong> is already handled: the <code>after_agent_callback</code> you implemented in the <strong>Callbacks</strong> section calls <code>await memory_service.add_session_to_memory(session)</code> after every agent turn.</p>
+<p>The <strong>read side</strong> is <code>PreloadMemoryTool</code> - ADK automatically invokes it before each turn to inject relevant past sessions into the model&#39;s context. You already wired it into <code>orchestrator_agent</code> in the <strong>Orchestrator</strong> section, so no code changes are needed here.</p>
+<h2 is-upgraded>Test cross-session memory</h2>
+<aside class="warning"><p><strong><code>adk web</code></strong><strong> uses </strong><strong><code>InMemorySessionService</code></strong> — sessions are isolated in-process and do not persist when you open a new session or restart the server. Cross-session memory only works when the agent is deployed to <strong>Agent Runtime with Agent Platform Memory Bank</strong> enabled.</p>
+</aside>
+<p>To verify memory works, use the deployed agent:</p>
+<pre><code language="language-bash" class="language-bash">uv run python deployment/deploy.py --action test_remote
+</code></pre>
+<p>Run it twice with different topics:</p>
+<p><strong>First run</strong> — session 1:</p>
+<pre><code language="language-text" class="language-text">Create content about Python async programming for backend developers
+</code></pre>
+<p><strong>Second run</strong> — session 2 (new invocation of <code>test_remote</code>):</p>
+<pre><code language="language-text" class="language-text">What blog topics have I asked you to write about before?
+</code></pre>
+<p>The orchestrator should recall the Python async topic from the first run:</p>
+<pre><code language="language-text" class="language-text">Based on our previous conversation, you asked me to write about
+&#34;Python async programming for backend developers&#34;. Would you like
+to create more content on that topic or explore something new?
+</code></pre>
+<aside class="special"><p><strong>How it works on Agent Runtime:</strong> Agent Platform Memory Bank is a managed vector store. After each turn, <code>after_agent_callback</code> calls <code>memory_service.add_session_to_memory()</code> to write the session. Before each turn, <code>PreloadMemoryTool</code> queries Memory Bank and injects relevant past sessions into the model context automatically.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Congratulations!" duration="2">
         <p>You&#39;ve built and deployed a multi-agent content creation system. Here&#39;s a summary of everything you built:</p>
 <h2 is-upgraded>What you built</h2>
-<pre><code language="language-text" class="language-text">master_orchestrator_agent
+<pre><code language="language-text" class="language-text">orchestrator_agent
 ├── full_content_workflow (SequentialAgent)
 │   ├── research_and_draft_workflow (SequentialAgent)
 │   │   ├── topic_research_agent        [google_search tool, output_key]
@@ -1624,7 +1595,7 @@ Deployed on:
 </td><td colspan="1" rowspan="1"><p>All 9 specialized agents</p>
 </td></tr>
 <tr><td colspan="1" rowspan="1"><p><code>Runner</code>, <code>Session</code>, <code>SessionService</code></p>
-</td><td colspan="1" rowspan="1"><p>ADK runtime fundamentals (<strong>ADK Core Concepts</strong> section)</p>
+</td><td colspan="1" rowspan="1"><p>ADK runtime fundamentals (<strong>Understand Google ADK</strong> section)</p>
 </td></tr>
 <tr><td colspan="1" rowspan="1"><p><code>output_key</code></p>
 </td><td colspan="1" rowspan="1"><p>Every agent that passes data downstream</p>

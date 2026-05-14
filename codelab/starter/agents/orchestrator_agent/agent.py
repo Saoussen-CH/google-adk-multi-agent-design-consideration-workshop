@@ -6,7 +6,7 @@ load_dotenv()
 
 from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, Agent
 from google.adk.tools import preload_memory_tool
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_IMPROVEMENT_ITERATIONS = int(os.getenv("MAX_IMPROVEMENT_ITERATIONS", "2"))
 from common.retry import GENERATE_CONTENT_CONFIG
 
@@ -27,14 +27,14 @@ from agents.seo_metadata_agent.agent import seo_metadata_agent
 from agents.content_analyzer_agent.agent import content_analyzer_agent
 
 
-# --- Step 8: Sequential — Research and Draft ---
+# --- Section 6: Sequential — Research and Draft ---
 # TODO: #REPLACE-research-and-draft-workflow
 # Create a SequentialAgent named "research_and_draft_workflow"
 # with sub_agents=[topic_research_agent, content_drafter_agent]
 research_and_draft_workflow = None  # Replace this line
 
 
-# --- Step 10: Loop — Quality Improvement ---
+# --- Section 7: Loop — Quality Improvement ---
 # TODO: #REPLACE-quality-improvement-loop
 # Create a LoopAgent named "quality_improvement_loop"
 # with sub_agents=[quality_checker_agent, content_improver_agent]
@@ -42,7 +42,7 @@ research_and_draft_workflow = None  # Replace this line
 quality_improvement_loop = None  # Replace this line
 
 
-# --- Step 11: Parallel — Multi-Channel Content Creation ---
+# --- Section 8: Parallel — Multi-Channel Content Creation ---
 # TODO: #REPLACE-parallel-content-creation
 # Create a ParallelAgent named "parallel_content_creation"
 # with sub_agents=[blog_post_writer_agent, social_media_creator_agent,
@@ -50,7 +50,7 @@ quality_improvement_loop = None  # Replace this line
 parallel_content_creation = None  # Replace this line
 
 
-# --- Step 12: Full Content Workflow ---
+# --- Section 9: Full Content Workflow ---
 # TODO: #REPLACE-full-content-workflow
 # Create a SequentialAgent named "full_content_workflow"
 # with sub_agents=[research_and_draft_workflow, quality_improvement_loop,
@@ -58,7 +58,7 @@ parallel_content_creation = None  # Replace this line
 full_content_workflow = None  # Replace this line
 
 
-# --- Step 13: Root Agent (Orchestrator) ---
+# --- Section 10: Root Agent (Orchestrator) ---
 # TODO: #REPLACE-orchestrator
 # Create an Agent named "orchestrator_agent" with:
 #   - model=MODEL_NAME  (plain string — lets ADK pick the right backend at runtime)
