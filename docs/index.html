@@ -494,8 +494,9 @@ content_drafter_agent
 <p>At the bottom of <code>agents/orchestrator_agent/agent.py</code>, set:</p>
 <pre><code language="language-python" class="language-python">root_agent = research_and_draft_workflow
 </code></pre>
-<aside class="special"><p><strong>Why is the workflow assembly in </strong><strong><code>orchestrator_agent/agent.py</code></strong><strong>?</strong> Each specialist agent (<code>topic_research_agent</code>, <code>content_drafter_agent</code>, etc.) lives in its own package and does one thing well. It has no knowledge of the pipeline it belongs to. The <code>orchestrator_agent</code> is the single place that composes those specialists into workflows and owns the execution graph. This separation means you can test any specialist in isolation with <code>adk web</code>, swap one out, or reuse it in a different pipeline, without touching the others.</p>
-</aside>
+<p><strong>Why </strong></p>
+<p><strong><code>root_agent</code></strong></p>
+<p><strong>?</strong> ADK and <code>adk web</code> discover the entry-point agent by looking for a module-level variable named exactly <code>root_agent</code>. Every <code>agent.py</code> must expose this name — it tells the framework which agent to hand the first user message to when a session starts. As you build this system step by step you reassign <code>root_agent</code> to whichever agent is the current top of the tree, so you can test each stage independently.</p>
 <h2 is-upgraded>Test the sequential workflow</h2>
 <pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
