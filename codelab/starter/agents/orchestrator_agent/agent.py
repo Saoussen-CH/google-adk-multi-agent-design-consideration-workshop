@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 # Ensure environment variables are loaded
 load_dotenv()
 
-from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, Agent
+from google.adk.agents import SequentialAgent, LoopAgent, ParallelAgent, LlmAgent
 from google.adk.tools import preload_memory_tool
 MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_IMPROVEMENT_ITERATIONS = int(os.getenv("MAX_IMPROVEMENT_ITERATIONS", "2"))
@@ -60,7 +60,7 @@ full_content_workflow = None  # Replace this line
 
 # --- Section 10: Root Agent (Orchestrator) ---
 # TODO: #REPLACE-orchestrator
-# Create an Agent named "orchestrator_agent" with:
+# Create an LlmAgent named "orchestrator_agent" with:
 #   - model=MODEL_NAME  (plain string — lets ADK pick the right backend at runtime)
 #   - instruction: routes to full_content_workflow for content creation
 #                  OR content_analyzer_agent for text analysis

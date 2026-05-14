@@ -333,8 +333,7 @@ root_agent = topic_research_agent
 <p><strong>Why output_key?</strong> Without it, the agent&#39;s response exists only as a conversation message. With <code>output_key="blog_topic"</code>, ADK automatically writes the response text to <code>session.state["blog_topic"]</code> - making it available to every other agent in the pipeline via <code>{blog_topic}</code> templating.</p>
 <h2 is-upgraded>Test locally with ADK web UI</h2>
 <p>Now let&#39;s test the agent using the ADK web UI - a built-in chat interface for testing agents before deploying to cloud.</p>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <aside class="special"><p><strong>Why </strong><strong><code>--allow_origins='*'</code></strong><strong>?</strong> Cloud Shell&#39;s Web Preview proxies your local server through a <code>*.cloudshell.dev</code> URL, which is a different origin than <code>127.0.0.1</code>. Without this flag, the dev UI gets blocked by CORS when creating a session and you&#39;ll see 403 Forbidden errors. The flag whitelists all origins - safe for local development.</p>
 </aside>
@@ -437,8 +436,7 @@ agent = Agent(
 <h2 is-upgraded>See the agent use the tools</h2>
 <p>The unit test above calls the functions directly. Now run the actual agent so you can see the LLM decide <em>when</em> to call each tool and what to do with the results.</p>
 <p>Start the ADK web interface:</p>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>content_analyzer_agent</code> from the dropdown, then send:</p>
 <pre><code language="language-text" class="language-text">Analyze this text: &#34;Artificial intelligence is transforming the way we work and live. Machine learning models can now write code, generate images, and hold conversations. These tools are becoming essential for developers and businesses alike.&#34;
@@ -499,8 +497,7 @@ content_drafter_agent
 <aside class="special"><p><strong>Why is the workflow assembly in </strong><strong><code>orchestrator_agent/agent.py</code></strong><strong>?</strong> Each specialist agent (<code>topic_research_agent</code>, <code>content_drafter_agent</code>, etc.) lives in its own package and does one thing well. It has no knowledge of the pipeline it belongs to. The <code>orchestrator_agent</code> is the single place that composes those specialists into workflows and owns the execution graph. This separation means you can test any specialist in isolation with <code>adk web</code>, swap one out, or reuse it in a different pipeline, without touching the others.</p>
 </aside>
 <h2 is-upgraded>Test the sequential workflow</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>orchestrator_agent</code> from the dropdown, then enter the prompt:</p>
 <pre><code language="language-text" class="language-text">Write a blog about sustainable packaging for eco-conscious millennials
@@ -558,7 +555,7 @@ current_content → &#34;# 10 Sustainable Packaging Innovations...\n\n...&#34;
     sub_agents=[research_and_draft_workflow, quality_improvement_loop],
 )
 </code></pre>
-<p>Run <code>uv run adk web agents --allow_origins='*' \\ --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
+<p>Run <code>uv run adk web agents --allow_origins='*' --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
 <pre><code language="language-text" class="language-text">Write a blog about sustainable packaging for eco-conscious millennials
 </code></pre>
 <aside class="special"><p><strong>Keep this as </strong><strong><code>root_agent</code></strong><strong> for now.</strong> You&#39;ll replace it with the three-phase pipeline in the next step.</p>
@@ -660,7 +657,7 @@ root_agent = full_content_workflow
 </code></pre>
 <p>This is a <code>SequentialAgent</code> wrapping other <code>SequentialAgent</code>, <code>LoopAgent</code>, and <code>ParallelAgent</code> instances. ADK treats all agent types uniformly as <code>sub_agents</code>, so nesting works at any depth.</p>
 <h2 is-upgraded>Test the complete pipeline</h2>
-<p>Run <code>uv run adk web agents --allow_origins='*' \\ --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
+<p>Run <code>uv run adk web agents --allow_origins='*' --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin</code>, select <code>orchestrator_agent</code> from the dropdown, and enter the prompt:</p>
 <pre><code language="language-text" class="language-text">Write a blog about sustainable packaging for eco-conscious millennials
 </code></pre>
 <p>All four keys should appear in the State tab simultaneously after the research → draft → quality loop completes:</p>
@@ -697,7 +694,7 @@ seo_metadata       → &#34;**Meta Title:** ...&#34;
 <p><code>content_analyzer_agent</code> is already complete — you built and tested it in <strong>section 5</strong>. It has all three tools wired in (<code>count_words</code>, <code>calculate_readability_score</code>, <code>generate_hashtags</code>) and its own <code>root_agent</code>. Here you simply add it as a sub-agent of the orchestrator.</p>
 <h2 is-upgraded>Fill in the orchestrator</h2>
 <p>Find the <code># TODO: #REPLACE-orchestrator</code> comment in <code>agents/orchestrator_agent/agent.py</code> and replace it with:</p>
-<pre><code language="language-python" class="language-python">orchestrator_agent = Agent(
+<pre><code language="language-python" class="language-python">orchestrator_agent = LlmAgent(
     name=&#34;orchestrator_agent&#34;,
     model=MODEL_NAME,
     instruction=&#34;&#34;&#34;
@@ -729,8 +726,7 @@ root_agent = orchestrator_agent
 <aside class="special"><p><strong>sub_agents vs AgentTool:</strong> Using <code>sub_agents=</code> means inner agent events propagate to the <code>Runner</code> and are visible externally (needed for the FastAPI SSE backend to detect which channel agent produced which output). Using <code>AgentTool</code> wraps the agent as an opaque tool call - inner events are hidden. See the <strong>Agent Teams: sub_agents vs AgentTool</strong> section for the full trade-off discussion.</p>
 </aside>
 <h2 is-upgraded>Test routing</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>orchestrator_agent</code> from the dropdown.</p>
 <p><strong>Test the analyzer route:</strong></p>
@@ -1377,8 +1373,7 @@ def after_tool_callback(
     print(f&#34;  🏁 TOOL DONE: {agent_name} finished {tool_name}&#34;)
 </code></pre>
 <h2 is-upgraded>Test the guardrail</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>orchestrator_agent</code> from the dropdown, then enter:</p>
 <pre><code language="language-text" class="language-text">Create content about violence and illegal activities
@@ -1482,8 +1477,7 @@ blog_post_writer_agent = Agent(
 <pre><code language="language-text" class="language-text">After writing the blog post, save it as an artifact with filename &#39;blog_post.md&#39;.
 </code></pre>
 <h2 is-upgraded>Try it out</h2>
-<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; \\
-    --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
+<pre><code language="language-bash" class="language-bash">uv run adk web agents --allow_origins=&#39;*&#39; --extra_plugins google.adk.plugins.logging_plugin.LoggingPlugin
 </code></pre>
 <p>Select <code>orchestrator_agent</code> from the dropdown, then enter:</p>
 <pre><code language="language-text" class="language-text">Create content about remote work productivity and save the blog post as an artifact called blog_post.md
